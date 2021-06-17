@@ -153,6 +153,7 @@ class Jogo:
         self.elementos['jogador'] = pygame.sprite.RenderPlain(self.jogador)
         self.elementos['tiros'] = pygame.sprite.RenderPlain()
         self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
+
         while self.run:
             clock.tick(1000 / dt)
 
@@ -228,12 +229,16 @@ class Virus(Nave):
             image = "virus.png"
         super().__init__(position, lives, speed, image, size)
 
-    def update(self, dt):
-        r = random.randint(-10,10)
-        z = random.randint(0,2)
-        move_speed = (dt / 16 * r,
-            dt / 16 * z)
-        self.rect = self.rect.move(move_speed)
+    def velocidade_virus(self):
+        r = 0
+        while -0.5<r<0.5:
+            r = random.uniform(-2,2)
+        move_speed = (2 * r,2)
+        return move_speed
+
+    def set_speed(self, speed):
+        move_speed = self.velocidade_virus()
+        self.speed = move_speed
 
 class Jogador(Nave):
     """
