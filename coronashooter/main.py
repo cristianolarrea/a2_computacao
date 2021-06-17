@@ -123,7 +123,7 @@ class Jogo:
         if event.type == pygame.QUIT:
             self.run = False
 
-        if event.type in (KEYDOWN, KEYUP):
+        if event.type == KEYDOWN:
             key = event.key
             if key == K_ESCAPE:
                 self.run = False
@@ -138,12 +138,24 @@ class Jogo:
                 self.jogador.accel_right()
             elif key == K_LEFT:
                 self.jogador.accel_left()
+                
+        if event.type == KEYUP:
+            key = event.key
+            if key == K_UP:
+                self.jogador.accel_zero()
+            elif key == K_DOWN:
+                self.jogador.accel_zero()
+            elif key == K_RIGHT:
+                self.jogador.accel_zero()
+            elif key == K_LEFT:
+                self.jogador.accel_zero()
 
         keys = pygame.key.get_pressed()
         if self.interval > 10:
             self.interval = 0
             if keys[K_RCTRL] or keys[K_LCTRL]:
                 self.jogador.atira(self.elementos["tiros"])
+
 
     def loop(self):
         clock = pygame.time.Clock()
@@ -165,7 +177,7 @@ class Jogo:
             # Desenhe no back buffer
             self.desenha_elementos()
             self.escreve_placar()
-            # texto = self.fonte.render(f"Vidas: {self.jogador.get_lives()}", True, (255, 255, 255), (0, 0, 0))
+            #texto = self.fonte.render(f"Vidas: {self.jogador.get_lives()}", True, (255, 255, 255), (0, 0, 0))
 
             pygame.display.flip()
 
@@ -220,10 +232,13 @@ class Nave(ElementoSprite):
     def accel_right(self):
         speed = self.get_speed()
         self.set_speed((speed[0] + self.acceleration[0], speed[1]))
+        
+    def accel_zero(self):
+        self.set_speed([0,0])
 
 
 class Virus(Nave):
-    def __init__(self, position, lives=1, speed=None, image=None, size=(100, 100)):
+    def __init__(self, position, lives=1, speed=None, image=None, size=(75, 75)):
         if not image:
             image = "virus.png"
         super().__init__(position, lives, speed, image, size)
@@ -240,7 +255,7 @@ class Jogador(Nave):
     das outras.
     """
 
-    def __init__(self, position, lives=10, image=None, new_size=[83, 248]):
+    def __init__(self, position, lives=10, image=None, new_size=[62, 186]):
         if not image:
             image = "seringa.png"
         super().__init__(position, lives, [0, 0], image, new_size)
