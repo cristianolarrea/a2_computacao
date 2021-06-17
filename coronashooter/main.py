@@ -228,6 +228,12 @@ class Virus(Nave):
             image = "virus.png"
         super().__init__(position, lives, speed, image, size)
 
+    def update(self, dt):
+        r = random.randint(-10,10)
+        z = random.randint(0,2)
+        move_speed = (dt / 16 * r,
+            dt / 16 * z)
+        self.rect = self.rect.move(move_speed)
 
 class Jogador(Nave):
     """
