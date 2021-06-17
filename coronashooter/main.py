@@ -12,7 +12,7 @@ import random
 
 
 class Jogo:
-    def __init__(self, size=(1000, 1000), fullscreen=False):
+    def __init__(self, size=(1000, 800), fullscreen=False):
         self.elementos = {}
         pygame.init()
         flags = pygame.DOUBLEBUF
