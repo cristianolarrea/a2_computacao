@@ -5,10 +5,10 @@ from pygame.locals import (KEYDOWN,
                            K_RIGHT,
                            QUIT,
                            K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL,
-                           K_SPACE
+                           K_SPACE,K_TAB
                            )
 from fundo import (Fundo,
-                   Tela_Inicial)
+                   Telas)
 from elementos import ElementoSprite
 import random
 
@@ -28,8 +28,9 @@ class Jogo:
         pygame.font.init()
         self.fonte = pygame.font.SysFont('bitstreamverasans', 42)
 
-        self.imagem_inicial=Tela_Inicial()
+        self.imagem_inicial=Telas()
         self.iniciando = True
+        self.imagem_final = Telas('tela_final.png')
 
         self.screen_size = self.tela.get_size()
         pygame.mouse.set_visible(0)
@@ -108,14 +109,14 @@ class Jogo:
         self.verifica_impactos(self.jogador, self.elementos["tiros_inimigo"],
                                self.jogador.alvejado)
         if self.jogador.morto:
-            self.run = False
+            self.tela_final()
             return
 
         # Verifica se o personagem trombou em algum inimigo
         self.verifica_impactos(self.jogador, self.elementos["virii"],
                                self.jogador.colisão)
         if self.jogador.morto:
-            self.run = False
+            self.tela_final()
             return
         # Verifica se o personagem atingiu algum alvo.
         hitted = self.verifica_impactos(self.elementos["tiros"],
@@ -173,6 +174,24 @@ class Jogo:
                 key = event.key
                 if key == K_SPACE:
                     self.iniciando = False
+
+    def tela_final(self):
+        final=True
+        self.imagem_final.draw(self.tela)
+        while final:
+            event = pygame.event.poll()
+            if event.type in (KEYDOWN, KEYUP):
+                key = event.key
+                if key == K_SPACE:
+                    final = False
+                    self.run = True
+                    self.fundo=Fundo()
+                    self.nivel =0
+                    self.loop()
+                elif key == K_TAB:
+                    final=False
+                    self.run=False
+
 
 
     def loop(self):
@@ -267,7 +286,7 @@ class Virus(Nave):
     def velocidade_virus(self):
         r = 0
         while -0.5<r<0.5:
-            r = random.uniform(-2,2)
+            r = random.uniform(-1,1)
         move_speed = (2 * r,2)
         return move_speed
 
