@@ -27,8 +27,10 @@ class Jogo:
         self.nivel = 0
         pygame.font.init()
         self.fonte = pygame.font.SysFont('bitstreamverasans', 42)
+
         self.imagem_inicial=Tela_Inicial()
         self.iniciando = True
+
         self.screen_size = self.tela.get_size()
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
@@ -56,11 +58,11 @@ class Jogo:
 
     def muda_nivel(self):
         xp = self.jogador.get_pontos()
-        if xp > 10 and self.level == 0:
+        if xp > 100 and self.level == 0:
             self.fundo = Fundo("tile2.png")
             self.nivel = 1
             self.jogador.set_lives(self.jogador.get_lives() + 3)
-        elif xp > 50 and self.level == 1:
+        elif xp > 500 and self.level == 1:
             self.fundo = Fundo("tile3.png")
             self.nivel = 2
             self.jogador.set_lives(self.player.get_lives() + 6)
@@ -125,7 +127,7 @@ class Jogo:
         if event.type == pygame.QUIT:
             self.run = False
 
-        if event.type in (KEYDOWN, KEYUP):
+        if event.type == KEYDOWN:
             key = event.key
             if key == K_ESCAPE:
                 self.run = False
@@ -140,12 +142,24 @@ class Jogo:
                 self.jogador.accel_right()
             elif key == K_LEFT:
                 self.jogador.accel_left()
+                
+        if event.type == KEYUP:
+            key = event.key
+            if key == K_UP:
+                self.jogador.accel_zero()
+            elif key == K_DOWN:
+                self.jogador.accel_zero()
+            elif key == K_RIGHT:
+                self.jogador.accel_zero()
+            elif key == K_LEFT:
+                self.jogador.accel_zero()
 
         keys = pygame.key.get_pressed()
         if self.interval > 10:
             self.interval = 0
             if keys[K_RCTRL] or keys[K_LCTRL]:
                 self.jogador.atira(self.elementos["tiros"])
+
 
     def tela_inicial(self):
         self.imagem_inicial.draw(self.tela)
@@ -157,6 +171,7 @@ class Jogo:
                 if key == K_SPACE:
                     self.iniciando = False
 
+
     def loop(self):
         self.tela_inicial()
         clock = pygame.time.Clock()
@@ -166,6 +181,7 @@ class Jogo:
         self.elementos['jogador'] = pygame.sprite.RenderPlain(self.jogador)
         self.elementos['tiros'] = pygame.sprite.RenderPlain()
         self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
+
         while self.run:
             clock.tick(1000 / dt)
 
@@ -178,7 +194,7 @@ class Jogo:
             # Desenhe no back buffer
             self.desenha_elementos()
             self.escreve_placar()
-            # texto = self.fonte.render(f"Vidas: {self.jogador.get_lives()}", True, (255, 255, 255), (0, 0, 0))
+            #texto = self.fonte.render(f"Vidas: {self.jogador.get_lives()}", True, (255, 255, 255), (0, 0, 0))
 
             pygame.display.flip()
 
@@ -233,14 +249,27 @@ class Nave(ElementoSprite):
     def accel_right(self):
         speed = self.get_speed()
         self.set_speed((speed[0] + self.acceleration[0], speed[1]))
+        
+    def accel_zero(self):
+        self.set_speed([0,0])
 
 
 class Virus(Nave):
-    def __init__(self, position, lives=1, speed=None, image=None, size=(100, 100)):
+    def __init__(self, position, lives=0, speed=None, image=None, size=(75, 75)):
         if not image:
             image = "virus.png"
         super().__init__(position, lives, speed, image, size)
 
+    def velocidade_virus(self):
+        r = 0
+        while -0.5<r<0.5:
+            r = random.uniform(-2,2)
+        move_speed = (2 * r,2)
+        return move_speed
+
+    def set_speed(self, speed):
+        move_speed = self.velocidade_virus()
+        self.speed = move_speed
 
 class Jogador(Nave):
     """
@@ -253,7 +282,7 @@ class Jogador(Nave):
     das outras.
     """
 
-    def __init__(self, position, lives=10, image=None, new_size=[83, 248]):
+    def __init__(self, position, lives=10, image=None, new_size=[62, 186]):
         if not image:
             image = "seringa.png"
         super().__init__(position, lives, [0, 0], image, new_size)
@@ -287,10 +316,8 @@ class Jogador(Nave):
 
     def atira(self, lista_de_tiros, image=None):
         l = 1
-        if self.pontos > 10:
+        if self.pontos > 500:
             l = 3
-        if self.pontos > 50:
-            l = 5
 
         p = self.get_pos()
         speeds = self.get_fire_speed(l)
@@ -310,13 +337,6 @@ class Jogador(Nave):
             speeds += [(0, -5)]
             speeds += [(-2, -3)]
             speeds += [(2, -3)]
-
-        if shots > 3 and shots <= 5:
-            speeds += [(0, -5)]
-            speeds += [(-2, -3)]
-            speeds += [(2, -3)]
-            speeds += [(-4, -2)]
-            speeds += [(4, -2)]
 
         return speeds
 
