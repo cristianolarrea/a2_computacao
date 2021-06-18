@@ -16,7 +16,7 @@ class Fundo:
         image = pygame.image.load(image).convert()
 
         self.imagesize = image.get_size()
-        self.pos = [0, -1 * self.imagesize[1]]
+        self.pos = [0, self.imagesize[1]]
         screen = pygame.display.get_surface()
         screen_size = screen.get_size()
 
@@ -35,7 +35,7 @@ class Fundo:
 
     def update(self, dt):
         self.pos[1] += 1
-        if self.pos[1] > 0:
+        if self.pos[1] > 1:
             self.pos[1] -= self.imagesize[1]
 
     def draw(self, screen):

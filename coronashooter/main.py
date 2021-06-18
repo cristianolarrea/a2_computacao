@@ -48,7 +48,9 @@ class Jogo:
         x = random.randint(1, self.screen_size[0])
         virii = self.elementos["virii"]
         if r > (10 * len(virii)):
-            enemy = Virus([0, 0])
+            for v in virii:
+                lives = v.get_lives()
+            enemy = Virus([0, 0], lives)
             size = enemy.get_size()
             enemy.set_pos([min(max(x, size[0] / 2), self.screen_size[0] - size[0] / 2), size[1] / 2])
             colisores = pygame.sprite.spritecollide(enemy, virii, False)
@@ -58,14 +60,15 @@ class Jogo:
 
     def muda_nivel(self):
         xp = self.jogador.get_pontos()
-        if xp > 100 and self.level == 0:
-            self.fundo = Fundo("tile2.png")
-            self.nivel = 1
+        if xp == 20:
             self.jogador.set_lives(self.jogador.get_lives() + 3)
-        elif xp > 500 and self.level == 1:
-            self.fundo = Fundo("tile3.png")
-            self.nivel = 2
-            self.jogador.set_lives(self.player.get_lives() + 6)
+            self.jogador.set_pontos(self.jogador.get_pontos() +1)
+            for v in self.elementos['virii']:
+                v.set_lives(2)
+        if xp > 20:
+            self.fundo = Fundo("sky.png")
+            self.nivel = 1
+
 
     def atualiza_elementos(self, dt):
         self.fundo.update(dt)
@@ -194,6 +197,7 @@ class Jogo:
             # Desenhe no back buffer
             self.desenha_elementos()
             self.escreve_placar()
+            self.muda_nivel()
             #texto = self.fonte.render(f"Vidas: {self.jogador.get_lives()}", True, (255, 255, 255), (0, 0, 0))
 
             pygame.display.flip()
