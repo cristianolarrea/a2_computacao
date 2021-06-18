@@ -41,7 +41,7 @@ class Fundo:
     def draw(self, screen):
         screen.blit(self.image, self.pos)
 
-class Tela_Inicial:
+class Telas:
     def __init__(self,image="tela_inicial.png"):
          image = os.path.join('imagens', image)
          self.image = pygame.image.load(image).convert()
