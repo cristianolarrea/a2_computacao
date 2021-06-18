@@ -4,15 +4,17 @@ from pygame.locals import (KEYDOWN,
                            K_LEFT,
                            K_RIGHT,
                            QUIT,
-                           K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL
+                           K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL,
+                           K_SPACE
                            )
-from fundo import Fundo
+from fundo import (Fundo,
+                   Tela_Inicial)
 from elementos import ElementoSprite
 import random
 
 
 class Jogo:
-    def __init__(self, size=(1000, 1000), fullscreen=False):
+    def __init__(self, size=(1000, 800), fullscreen=False):
         self.elementos = {}
         pygame.init()
         flags = pygame.DOUBLEBUF
@@ -25,8 +27,8 @@ class Jogo:
         self.nivel = 0
         pygame.font.init()
         self.fonte = pygame.font.SysFont('bitstreamverasans', 42)
-
-
+        self.imagem_inicial=Tela_Inicial()
+        self.iniciando = True
         self.screen_size = self.tela.get_size()
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
@@ -145,7 +147,18 @@ class Jogo:
             if keys[K_RCTRL] or keys[K_LCTRL]:
                 self.jogador.atira(self.elementos["tiros"])
 
+    def tela_inicial(self):
+        self.imagem_inicial.draw(self.tela)
+
+        while self.iniciando:
+            event = pygame.event.poll()
+            if event.type in (KEYDOWN, KEYUP):
+                key = event.key
+                if key == K_SPACE:
+                    self.iniciando = False
+
     def loop(self):
+        self.tela_inicial()
         clock = pygame.time.Clock()
         dt = 16
         self.elementos['virii'] = pygame.sprite.RenderPlain(Virus([120, 50]))
