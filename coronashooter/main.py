@@ -27,6 +27,7 @@ class Jogo:
         self.nivel = 0
         pygame.font.init()
         self.fonte = pygame.font.SysFont('bitstreamverasans', 42)
+        self.vida_virus = 0
 
         self.imagem_inicial=Telas()
         self.iniciando = True
@@ -50,7 +51,7 @@ class Jogo:
         virii = self.elementos["virii"]
         if r > (10 * len(virii)):
             for v in virii:
-                lives = v.get_lives()
+                lives = self.vida_virus
             enemy = Virus([0, 0], lives)
             size = enemy.get_size()
             enemy.set_pos([min(max(x, size[0] / 2), self.screen_size[0] - size[0] / 2), size[1] / 2])
@@ -68,6 +69,7 @@ class Jogo:
                 v.set_lives(2)
         if xp > 20:
             self.fundo = Fundo("sky.png")
+            self.vida_virus = 1
             self.nivel = 1
 
 
@@ -187,6 +189,7 @@ class Jogo:
                     self.run = True
                     self.fundo=Fundo()
                     self.nivel =0
+                    self.vida_virus = 0
                     self.loop()
                 elif key == K_TAB:
                     final=False
@@ -287,7 +290,7 @@ class Virus(Nave):
         r = 0
         while -0.5<r<0.5:
             r = random.uniform(-1,1)
-        move_speed = (2 * r,2)
+        move_speed = (2 * r,2.5)
         return move_speed
 
     def set_speed(self, speed):
