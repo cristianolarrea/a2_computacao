@@ -25,8 +25,6 @@ class Jogo:
         self.nivel = 0
         pygame.font.init()
         self.fonte = pygame.font.SysFont('bitstreamverasans', 42)
-
-
         self.screen_size = self.tela.get_size()
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
@@ -54,11 +52,11 @@ class Jogo:
 
     def muda_nivel(self):
         xp = self.jogador.get_pontos()
-        if xp > 10 and self.level == 0:
+        if xp > 100 and self.level == 0:
             self.fundo = Fundo("tile2.png")
             self.nivel = 1
             self.jogador.set_lives(self.jogador.get_lives() + 3)
-        elif xp > 50 and self.level == 1:
+        elif xp > 500 and self.level == 1:
             self.fundo = Fundo("tile3.png")
             self.nivel = 2
             self.jogador.set_lives(self.player.get_lives() + 6)
@@ -239,7 +237,7 @@ class Nave(ElementoSprite):
 
 
 class Virus(Nave):
-    def __init__(self, position, lives=1, speed=None, image=None, size=(75, 75)):
+    def __init__(self, position, lives=0, speed=None, image=None, size=(75, 75)):
         if not image:
             image = "virus.png"
         super().__init__(position, lives, speed, image, size)
@@ -300,10 +298,8 @@ class Jogador(Nave):
 
     def atira(self, lista_de_tiros, image=None):
         l = 1
-        if self.pontos > 10:
+        if self.pontos > 500:
             l = 3
-        if self.pontos > 50:
-            l = 5
 
         p = self.get_pos()
         speeds = self.get_fire_speed(l)
@@ -323,13 +319,6 @@ class Jogador(Nave):
             speeds += [(0, -5)]
             speeds += [(-2, -3)]
             speeds += [(2, -3)]
-
-        if shots > 3 and shots <= 5:
-            speeds += [(0, -5)]
-            speeds += [(-2, -3)]
-            speeds += [(2, -3)]
-            speeds += [(-4, -2)]
-            speeds += [(4, -2)]
 
         return speeds
 
