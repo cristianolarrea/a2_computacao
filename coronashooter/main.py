@@ -50,8 +50,7 @@ class Jogo:
         x = random.randint(1, self.screen_size[0])
         virii = self.elementos["virii"]
         if r > (10 * len(virii)):
-            for v in virii:
-                lives = self.vida_virus
+            lives = self.vida_virus
             enemy = Virus([0, 0], lives)
             size = enemy.get_size()
             enemy.set_pos([min(max(x, size[0] / 2), self.screen_size[0] - size[0] / 2), size[1] / 2])
