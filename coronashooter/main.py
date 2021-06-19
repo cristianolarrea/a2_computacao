@@ -5,7 +5,7 @@ from pygame.locals import (KEYDOWN,
                            K_RIGHT,
                            QUIT,
                            K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL,
-                           K_SPACE,K_TAB
+                           K_SPACE,K_TAB, K_p
                            )
 from fundo import (Fundo,
                    Telas)
@@ -37,6 +37,7 @@ class Jogo:
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
         self.run = True
+        self.pause = False
 
 
     def escreve_placar(self):
@@ -102,31 +103,6 @@ class Jogo:
                 action()
             return elemento.morto
 
-    def ação_elemento(self):
-        """
-        Executa as ações dos elementos do jogo.
-        :return:
-        """
-        self.verifica_impactos(self.jogador, self.elementos["tiros_inimigo"],
-                               self.jogador.alvejado)
-        if self.jogador.morto:
-            self.tela_final()
-            return
-
-        # Verifica se o personagem trombou em algum inimigo
-        self.verifica_impactos(self.jogador, self.elementos["virii"],
-                               self.jogador.colisão)
-        if self.jogador.morto:
-            self.tela_final()
-            return
-        # Verifica se o personagem atingiu algum alvo.
-        hitted = self.verifica_impactos(self.elementos["tiros"],
-                                        self.elementos["virii"],
-                                        Virus.alvejado)
-
-        # Aumenta a pontos baseado no número de acertos:
-        self.jogador.set_pontos(self.jogador.get_pontos() + len(hitted))
-
     def trata_eventos(self):
         event = pygame.event.poll()
         if event.type == pygame.QUIT:
@@ -136,6 +112,10 @@ class Jogo:
             key = event.key
             if key == K_ESCAPE:
                 self.run = False
+
+            elif key == K_p:
+                self.pause = True
+
             elif key in (K_LCTRL, K_RCTRL):
                 self.interval = 0
                 self.jogador.atira(self.elementos["tiros"])
@@ -147,7 +127,7 @@ class Jogo:
                 self.jogador.accel_right()
             elif key == K_LEFT:
                 self.jogador.accel_left()
-                
+
         if event.type == KEYUP:
             key = event.key
             if key == K_UP:
@@ -165,6 +145,40 @@ class Jogo:
             if keys[K_RCTRL] or keys[K_LCTRL]:
                 self.jogador.atira(self.elementos["tiros"])
 
+    def ação_elemento(self):
+        """
+        Executa as ações dos elementos do jogo.
+        :return:
+        """
+
+        self.verifica_impactos(self.jogador, self.elementos["tiros_inimigo"],
+                               self.jogador.alvejado)
+        if self.jogador.morto:
+            self.tela_final()
+            return 0
+
+        # Verifica se o personagem trombou em algum inimigo
+        self.verifica_impactos(self.jogador, self.elementos["virii"],
+                               self.jogador.colisão)
+        if self.jogador.morto:
+            self.tela_final()
+            return 0
+        # Verifica se o personagem atingiu algum alvo.
+        hitted = self.verifica_impactos(self.elementos["tiros"],
+                                        self.elementos["virii"],
+                                        Virus.alvejado)
+
+        # Aumenta a pontos baseado no número de acertos:
+        self.jogador.set_pontos(self.jogador.get_pontos() + len(hitted))
+
+    # Verifica se o usuário pausou o jogo e o mantém em uma tela de pausa
+    def verifica_pausa(self):
+        while(self.pause):
+            self.imagem_inicial.draw(self.tela)
+            event = pygame.event.poll()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    self.pause = False
 
     def tela_inicial(self):
         self.imagem_inicial.draw(self.tela)
@@ -194,8 +208,6 @@ class Jogo:
                     final=False
                     self.run=False
 
-
-
     def loop(self):
         self.tela_inicial()
         clock = pygame.time.Clock()
@@ -208,8 +220,8 @@ class Jogo:
 
         while self.run:
             clock.tick(1000 / dt)
-
             self.trata_eventos()
+            self.verifica_pausa()
             self.ação_elemento()
             self.manutenção()
             # Atualiza Elementos
