@@ -51,3 +51,4 @@ class ElementoSprite(pygame.sprite.Sprite):
 
     def scale(self, new_size):
         self.image = pygame.transform.scale(self.image, new_size)
+

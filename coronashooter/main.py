@@ -1,5 +1,6 @@
 # Música de fundo de Zefz
 import ntpath
+import time
 from os import path
 import pickle
 import pygame
@@ -56,13 +57,18 @@ class Jogo:
         self.fonte = pygame.font.SysFont('bitstreamverasans', 42)
         self.vida_virus = 0
 
-
-
-
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
         self.run = True
         self.pause = False
+
+
+        # Animações de Explosão
+        self.explosoes_frames = []
+        for i in range(32):
+            filename = f'explosao_{i}.png'
+            self.explosoes_frames.append(filename)
+
 
 
     def escreve_placar(self):
@@ -120,6 +126,7 @@ class Jogo:
             hitted = pygame.sprite.groupcollide(elemento, list, 1, 0)
             for v in hitted.values():
                 for o in v:
+                    Explosao(o.get_pos(), self.explosoes_frames, self.elementos['explosao'])
                     random.choice(self.sons_explosao).play()
                     action(o)
             return hitted
@@ -127,6 +134,7 @@ class Jogo:
         elif isinstance(elemento, pygame.sprite.Sprite):
             if pygame.sprite.spritecollide(elemento, list, 1):
                 self.som_atingido.play()
+                Explosao(elemento.get_pos(), self.explosoes_frames, self.elementos['explosao'])
                 action()
             return elemento.morto
 
@@ -275,6 +283,7 @@ class Jogo:
         self.jogador = Jogador([200, 400], 5)
         self.elementos['jogador'] = pygame.sprite.RenderPlain(self.jogador)
         self.elementos['tiros'] = pygame.sprite.RenderPlain()
+        self.elementos['explosao'] = pygame.sprite.RenderPlain()
         self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
 
         while self.run:
@@ -446,6 +455,30 @@ class Tiro(ElementoSprite):
         if list is not None:
             self.add(list)
 
+class Explosao(ElementoSprite):
+    def __init__(self, position, lista_imgs, expl_sprite):
+        self.frame = 0
+        self.pos = position
+        self.lista_imgs = lista_imgs
+        image = lista_imgs[self.frame]
+        super().__init__(image, position, 0)
+        self.add(expl_sprite)
+        self.ultimo_update = pygame.time.get_ticks()
+        self.tempo_de_espera = 30
+
+        print(len(self.lista_imgs))
+    def update(self, dt):
+        agora = pygame.time.get_ticks()
+        if agora - self.ultimo_update > self.tempo_de_espera:
+            self.ultimo_update = agora
+            self.frame += 1
+            print(self.frame, len(self.lista_imgs))
+            if self.frame < len(self.lista_imgs):
+                image = self.lista_imgs[self.frame]
+                super().__init__(image, self.pos, 0)
+            else:
+                self.kill()
+                super().kill()
 
 if __name__ == '__main__':
     J = Jogo(fullscreen=False)
