@@ -27,15 +27,16 @@ class Jogo:
         pygame.font.init()
         pygame.mixer.init()
 
+        # Inicializações relativas ao som
         sons_dir = path.join(path.dirname(__file__), 'sons')
-        som_explosao1 = pygame.mixer.Sound(path.join(sons_dir, 'explosion_1.flac'))
-        som_explosao2 = pygame.mixer.Sound(path.join(sons_dir, 'explosion_2.flac'))
+        self.som_disparo = pygame.mixer.Sound(path.join(sons_dir, 'som_laser.wav'))
+        self.som_atingido = pygame.mixer.Sound(path.join(sons_dir, 'som_atingido.wav'))
+        self.sons_explosao = []
+        for som in ['som_explosao1.wav', 'som_explosao2.wav', 'som_explosao3.wav']:
+            self.sons_explosao.append(pygame.mixer.Sound(path.join(sons_dir, som)))
 
         pygame.mixer.music.load(path.join(sons_dir, 'background_music.ogg'))
         pygame.mixer.music.set_volume(0.75)
-
-        self.som_disparo = pygame.mixer.Sound(path.join(sons_dir, 'disparo.mp3'))
-        self.sons_explosao = [som_explosao1, som_explosao2]
 
         # inicializações relativas à tela
         flags = pygame.DOUBLEBUF
@@ -125,6 +126,7 @@ class Jogo:
 
         elif isinstance(elemento, pygame.sprite.Sprite):
             if pygame.sprite.spritecollide(elemento, list, 1):
+                self.som_atingido.play()
                 action()
             return elemento.morto
 
