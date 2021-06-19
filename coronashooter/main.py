@@ -1,5 +1,8 @@
+import ntpath
+from os import path
 import pickle
 import pygame
+import random
 from pygame.locals import (KEYDOWN,
                            KEYUP,
                            K_LEFT,
@@ -13,28 +16,42 @@ from fundo import (Fundo,
 from elementos import ElementoSprite
 import random
 
+
 class Jogo:
     def __init__(self, size=(1000, 800), fullscreen=False):
         self.elementos = {}
+
+        # inicializa o pygame
         pygame.init()
+        pygame.font.init()
+        pygame.mixer.init()
+
+        sons_dir = path.join(path.dirname(__file__), 'sons')
+        som_explosao1 = pygame.mixer.Sound(path.join(sons_dir, 'explosion_1.flac'))
+        som_explosao2 = pygame.mixer.Sound(path.join(sons_dir, 'explosion_2.flac'))
+        self.sons_explosao = [som_explosao1, som_explosao2]
+
+        # inicializações relativas à tela
         flags = pygame.DOUBLEBUF
         if fullscreen:
             flags |= pygame.FULLSCREEN
         self.tela = pygame.display.set_mode(size, flags=flags, depth=16)
         self.fundo = Fundo()
-        self.jogador = None
-        self.interval = 0
-        self.nivel = 0
-        pygame.font.init()
-        self.fonte = pygame.font.SysFont('bitstreamverasans', 42)
-        self.vida_virus = 0
-
-        self.imagem_inicial=Telas()
+        self.imagem_inicial = Telas()
         self.iniciando = True
         self.imagem_final = Telas('tela_final.png')
         self.tela_pause = Telas('tela_pause.png')
-
         self.screen_size = self.tela.get_size()
+
+        self.jogador = None
+        self.interval = 0
+        self.nivel = 0
+        self.fonte = pygame.font.SysFont('bitstreamverasans', 42)
+        self.vida_virus = 0
+
+
+
+
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
         self.run = True
@@ -96,6 +113,7 @@ class Jogo:
             hitted = pygame.sprite.groupcollide(elemento, list, 1, 0)
             for v in hitted.values():
                 for o in v:
+                    random.choice(self.sons_explosao).play()
                     action(o)
             return hitted
 
