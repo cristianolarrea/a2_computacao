@@ -1,3 +1,4 @@
+# Música de fundo de Zefz
 import ntpath
 from os import path
 import pickle
@@ -29,6 +30,10 @@ class Jogo:
         sons_dir = path.join(path.dirname(__file__), 'sons')
         som_explosao1 = pygame.mixer.Sound(path.join(sons_dir, 'explosion_1.flac'))
         som_explosao2 = pygame.mixer.Sound(path.join(sons_dir, 'explosion_2.flac'))
+
+        pygame.mixer.music.load(path.join(sons_dir, 'background_music.ogg'))
+        pygame.mixer.music.set_volume(0.5)
+
         self.sons_explosao = [som_explosao1, som_explosao2]
 
         # inicializações relativas à tela
@@ -260,6 +265,7 @@ class Jogo:
 
     def loop(self):
         clock = pygame.time.Clock()
+        pygame.mixer.music.play(loops=-1)
         self.tela_inicial()
         dt = 16
         self.elementos['virii'] = pygame.sprite.RenderPlain(Virus([120, 50]))
