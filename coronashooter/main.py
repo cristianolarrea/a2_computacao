@@ -1,3 +1,4 @@
+import pickle
 import pygame
 from pygame.locals import (KEYDOWN,
                            KEYUP,
@@ -11,7 +12,6 @@ from fundo import (Fundo,
                    Telas)
 from elementos import ElementoSprite
 import random
-
 
 class Jogo:
     def __init__(self, size=(1000, 800), fullscreen=False):
@@ -113,7 +113,7 @@ class Jogo:
             if key == K_ESCAPE:
                 self.run = False
 
-            elif key == K_p:
+            elif key == K_SPACE:
                 self.pause = True
 
             elif key in (K_LCTRL, K_RCTRL):
@@ -177,8 +177,18 @@ class Jogo:
             self.imagem_inicial.draw(self.tela)
             event = pygame.event.poll()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_p:
+                if event.key == pygame.K_SPACE:
                     self.pause = False
+                elif event.key == pygame.K_TAB:
+                    self.salva_jogo()
+
+    def carrega_jogo(self):
+        teste = pickle.load(open("save.p", "rb"))
+        print('Jogo carregado com sucesso! Nível do jogo anterior' + str(teste))
+
+    def salva_jogo(self):
+        pickle.dump(self.nivel, open("save.p", "wb"))
+        print('Jogo salvo com sucesso')  # substituir por mensagem de verdade
 
     def tela_inicial(self):
         self.imagem_inicial.draw(self.tela)
@@ -189,6 +199,10 @@ class Jogo:
                 key = event.key
                 if key == K_SPACE:
                     self.iniciando = False
+                # Caso o usuário aperte TAB, carrega o jogo salvo
+                if key == K_TAB:
+                    self.iniciando = False
+                    self.carrega_jogo()
 
     def tela_final(self):
         final=True
@@ -209,8 +223,8 @@ class Jogo:
                     self.run=False
 
     def loop(self):
-        self.tela_inicial()
         clock = pygame.time.Clock()
+        self.tela_inicial()
         dt = 16
         self.elementos['virii'] = pygame.sprite.RenderPlain(Virus([120, 50]))
         self.jogador = Jogador([200, 400], 5)
