@@ -32,8 +32,9 @@ class Jogo:
         som_explosao2 = pygame.mixer.Sound(path.join(sons_dir, 'explosion_2.flac'))
 
         pygame.mixer.music.load(path.join(sons_dir, 'background_music.ogg'))
-        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.set_volume(0.75)
 
+        self.som_disparo = pygame.mixer.Sound(path.join(sons_dir, 'disparo.mp3'))
         self.sons_explosao = [som_explosao1, som_explosao2]
 
         # inicializações relativas à tela
@@ -142,7 +143,7 @@ class Jogo:
 
             elif key in (K_LCTRL, K_RCTRL):
                 self.interval = 0
-                self.jogador.atira(self.elementos["tiros"])
+                self.jogador.atira(self.elementos["tiros"], self.som_disparo)
             elif key == K_UP:
                 self.jogador.accel_top()
             elif key == K_DOWN:
@@ -167,7 +168,7 @@ class Jogo:
         if self.interval > 10:
             self.interval = 0
             if keys[K_RCTRL] or keys[K_LCTRL]:
-                self.jogador.atira(self.elementos["tiros"])
+                self.jogador.atira(self.elementos["tiros"], self.som_disparo)
 
     def ação_elemento(self):
         """
@@ -407,7 +408,8 @@ class Jogador(Nave):
     def set_pontos(self, pontos):
         self.pontos = pontos
 
-    def atira(self, lista_de_tiros, image=None):
+    def atira(self, lista_de_tiros, som_disparo, image=None):
+        som_disparo.play()
         l = 1
         if self.pontos > 500:
             l = 3
