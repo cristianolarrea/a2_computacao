@@ -32,6 +32,7 @@ class Jogo:
         self.imagem_inicial=Telas()
         self.iniciando = True
         self.imagem_final = Telas('tela_final.png')
+        self.tela_pause = Telas('tela_pause.png')
 
         self.screen_size = self.tela.get_size()
         pygame.mouse.set_visible(0)
@@ -174,13 +175,21 @@ class Jogo:
     # Verifica se o usuário pausou o jogo e o mantém em uma tela de pausa
     def verifica_pausa(self):
         while(self.pause):
-            self.imagem_inicial.draw(self.tela)
+            self.tela_pause.draw(self.tela)
             event = pygame.event.poll()
+            #evento para sair do jogo ao clicar no X da janela
+            if event.type == pygame.QUIT:
+                self.run = False
+                self.pause=False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.pause = False
                 elif event.key == pygame.K_TAB:
                     self.salva_jogo()
+                #evento para fechar a janela ao apertar esc
+                elif event.key == K_ESCAPE:
+                    self.run = False
+                    self.pause = False
 
     def carrega_jogo(self):
         teste = pickle.load(open("save.p", "rb"))
@@ -195,8 +204,14 @@ class Jogo:
 
         while self.iniciando:
             event = pygame.event.poll()
+            if event.type == pygame.QUIT:
+                self.run = False
+                self.iniciando=False
             if event.type in (KEYDOWN, KEYUP):
                 key = event.key
+                if key == K_ESCAPE:
+                    self.run = False
+                    self.iniciando = False
                 if key == K_SPACE:
                     self.iniciando = False
                 # Caso o usuário aperte TAB, carrega o jogo salvo
@@ -209,8 +224,14 @@ class Jogo:
         self.imagem_final.draw(self.tela)
         while final:
             event = pygame.event.poll()
+            if event.type == pygame.QUIT:
+                self.run = False
+                final=False
             if event.type in (KEYDOWN, KEYUP):
                 key = event.key
+                if key == K_ESCAPE:
+                    self.run = False
+                    final=False
                 if key == K_SPACE:
                     final = False
                     self.run = True
@@ -218,9 +239,6 @@ class Jogo:
                     self.nivel =0
                     self.vida_virus = 0
                     self.loop()
-                elif key == K_TAB:
-                    final=False
-                    self.run=False
 
     def loop(self):
         clock = pygame.time.Clock()
