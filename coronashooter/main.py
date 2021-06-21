@@ -86,7 +86,7 @@ class Jogo:
         if r > (10 * len(virii)):
             lives = self.vida_virus
             if self.nivel == 1:
-                enemy = Virus([0, 0], lives,image='explosao_3.png')
+                enemy = Virus([0, 0], lives,image='virus2.png')
             if self.nivel == 0:
                 enemy = Virus([0, 0], lives)
 
