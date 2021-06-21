@@ -18,9 +18,11 @@ from fundo import (Fundo,
 from elementos import ElementoSprite
 import random
 
+width = 1000
+height = 800
 
 class Jogo:
-    def __init__(self, size=(1000, 800), fullscreen=False):
+    def __init__(self, size=(width, height), fullscreen=False):
         self.elementos = {}
 
         # inicializa o pygame
@@ -51,7 +53,7 @@ class Jogo:
         self.tela_pause = Telas('tela_pause.png')
         self.screen_size = self.tela.get_size()
 
-        self.jogador = Jogador([200, 400], 5)
+        self.jogador = Jogador([0.45*width, 0.7*height], 5)
         self.interval = 0
         self.nivel = 0
         self.fonte = pygame.font.SysFont('arial', 42)
