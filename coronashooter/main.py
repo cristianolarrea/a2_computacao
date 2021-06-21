@@ -91,18 +91,19 @@ class Jogo:
                 return
             self.elementos["virii"].add(enemy)
 
+
     def muda_nivel(self):
         xp = self.jogador.get_pontos()
         if xp == 20:
-            self.jogador.set_lives(self.jogador.get_lives() + 3)
-            self.jogador.set_pontos(self.jogador.get_pontos() +1)
-            self.fundo = Fundo("sky.png")
-            self.vida_virus = 1
             self.nivel = 1
+            self.jogador.set_lives(self.jogador.get_lives() + 3)
             for v in self.elementos['virii']:
                 v.set_lives(2)
 
-
+    def constroi_nivel(self):
+        if self.nivel == 1:
+            self.fundo = Fundo("sky.png")
+            self.vida_virus = 1
 
     def atualiza_elementos(self, dt):
         self.fundo.update(dt)
@@ -227,10 +228,12 @@ class Jogo:
 
     def carrega_jogo(self):
         teste = pickle.load(open("save.p", "rb"))
+        print(teste)
+        self.nivel = teste['nivel']
         print('Jogo carregado com sucesso! Nível do jogo anterior' + str(teste))
 
     def salva_jogo(self):
-        pickle.dump(self.nivel, open("save.p", "wb"))
+        pickle.dump({'nivel':self.nivel, 'vida_virus':self.vida_virus}, open("save.p", "wb"))
         print('Jogo salvo com sucesso')  # substituir por mensagem de verdade
 
     def tela_inicial(self):
@@ -299,6 +302,7 @@ class Jogo:
             self.desenha_elementos()
             self.escreve_placar()
             self.muda_nivel()
+            self.constroi_nivel()
             #texto = self.fonte.render(f"Vidas: {self.jogador.get_lives()}", True, (255, 255, 255), (0, 0, 0))
 
             pygame.display.flip()
