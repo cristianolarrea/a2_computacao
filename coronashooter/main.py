@@ -96,12 +96,12 @@ class Jogo:
         if xp == 20:
             self.jogador.set_lives(self.jogador.get_lives() + 3)
             self.jogador.set_pontos(self.jogador.get_pontos() +1)
-            for v in self.elementos['virii']:
-                v.set_lives(2)
-        if xp > 20:
             self.fundo = Fundo("sky.png")
             self.vida_virus = 1
             self.nivel = 1
+            for v in self.elementos['virii']:
+                v.set_lives(2)
+
 
 
     def atualiza_elementos(self, dt):
