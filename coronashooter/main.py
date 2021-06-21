@@ -70,7 +70,6 @@ class Jogo:
             self.explosoes_frames.append(filename)
 
 
-
     def escreve_placar(self):
         heart = "♥"
         vidas = self.fonte.render(f'{self.jogador.get_lives()*heart}', 1, (255, 0, 0))
@@ -288,7 +287,7 @@ class Jogo:
         self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
 
         while self.run:
-            clock.tick(1000 / dt)
+            clock.tick(1000/dt)
             self.trata_eventos()
             self.verifica_pausa()
             self.ação_elemento()
@@ -364,13 +363,12 @@ class Virus(Nave):
     def __init__(self, position, lives=0, speed=None, image=None, size=(75, 75)):
         if not image:
             image = "virus.png"
-        super().__init__(position, lives, speed, image, size)
+        super().__init__(position, lives, [0, 0], image, size)
 
     def velocidade_virus(self):
-        r = 0
-        while -0.5<r<0.5:
-            r = random.uniform(-1,1)
-        move_speed = (2 * r,2.5)
+        x = random.randrange(-2, 2)
+        y = random.randrange(2, 5)
+        move_speed = (x, y)
         return move_speed
 
     def set_speed(self, speed):
@@ -478,6 +476,7 @@ class Explosao(ElementoSprite):
                 image = self.lista_imgs[self.frame]
                 super().__init__(image, self.pos, 0)
             else:
+                print('oi')
                 self.kill()
                 super().kill()
 
