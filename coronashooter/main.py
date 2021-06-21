@@ -51,7 +51,7 @@ class Jogo:
         self.tela_pause = Telas('tela_pause.png')
         self.screen_size = self.tela.get_size()
 
-        self.jogador = None
+        self.jogador = Jogador([200, 400], 5)
         self.interval = 0
         self.nivel = 0
         self.fonte = pygame.font.SysFont('arial', 42)
@@ -97,6 +97,7 @@ class Jogo:
         if xp == 20:
             self.nivel = 1
             self.jogador.set_lives(self.jogador.get_lives() + 3)
+            self.jogador.set_pontos(self.jogador.get_pontos() + 1)
             for v in self.elementos['virii']:
                 v.set_lives(2)
 
@@ -230,10 +231,14 @@ class Jogo:
         teste = pickle.load(open("save.p", "rb"))
         print(teste)
         self.nivel = teste['nivel']
+        self.jogador.set_pontos(teste['pontos'])
+        self.jogador.set_lives(teste['vidas'])
         print('Jogo carregado com sucesso! Nível do jogo anterior' + str(teste))
 
     def salva_jogo(self):
-        pickle.dump({'nivel':self.nivel, 'vida_virus':self.vida_virus}, open("save.p", "wb"))
+        pickle.dump({'nivel':self.nivel,
+                     'pontos':self.jogador.get_pontos(),
+                     'vidas':self.jogador.get_lives()}, open("save.p", "wb"))
         print('Jogo salvo com sucesso')  # substituir por mensagem de verdade
 
     def tela_inicial(self):
@@ -283,7 +288,6 @@ class Jogo:
         self.tela_inicial()
         dt = 16
         self.elementos['virii'] = pygame.sprite.RenderPlain(Virus([120, 50]))
-        self.jogador = Jogador([200, 400], 5)
         self.elementos['jogador'] = pygame.sprite.RenderPlain(self.jogador)
         self.elementos['tiros'] = pygame.sprite.RenderPlain()
         self.elementos['explosao'] = pygame.sprite.RenderPlain()
