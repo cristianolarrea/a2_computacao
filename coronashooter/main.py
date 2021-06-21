@@ -85,7 +85,11 @@ class Jogo:
         virii = self.elementos["virii"]
         if r > (10 * len(virii)):
             lives = self.vida_virus
-            enemy = Virus([0, 0], lives)
+            if self.nivel == 1:
+                enemy = Virus([0, 0], lives,image='explosao_3.png')
+            if self.nivel == 0:
+                enemy = Virus([0, 0], lives)
+
             size = enemy.get_size()
             enemy.set_pos([min(max(x, size[0] / 2), self.screen_size[0] - size[0] / 2), size[1] / 2])
             colisores = pygame.sprite.spritecollide(enemy, virii, False)
