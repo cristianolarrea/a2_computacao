@@ -53,7 +53,7 @@ class Jogo:
         self.img_tela_final = Telas('tela_final.png',self.screen_size)
         self.img_tela_pausa = Telas('tela_pause.png',self.screen_size)
 
-        self.jogador = Jogador([0.45*self.screen_size[0], self.screen_size[1]], 5)
+        self.jogador = Jogador([0.45*self.screen_size[0], 0.8*self.screen_size[1]], 5)
         self.interval = 0
         self.nivel = 0
         self.fonte = pygame.font.SysFont('arial', 42)
@@ -73,7 +73,7 @@ class Jogo:
             self.explosoes_frames.append(filename)
 
 
-    def escreve_placar(self,x_score=550,y_score=30,x_vida=30,y_vida=30):
+    def escreve_placar(self,x_score,y_score,x_vida,y_vida):
         heart = "♥"
         vidas = self.fonte.render(f'{self.jogador.get_lives()*heart}', 1, (255, 0, 0))
         score = self.fonte2.render(f'Score: {self.jogador.pontos}', 1, (255,255,255))
@@ -246,7 +246,8 @@ class Jogo:
     def verifica_pausa(self):
         while(self.pause):
             self.img_tela_pausa.draw(self.tela)
-            self.escreve_placar(x_score=315,y_score=415,x_vida=345,y_vida=375)
+            self.escreve_placar(x_score=0.41 * self.screen_size[0], y_score=0.55*self.screen_size[1],
+                                x_vida=0.44 * self.screen_size[0], y_vida=0.65*self.screen_size[1])
             pygame.display.flip()
             event = pygame.event.poll()
             #evento para sair do jogo ao clicar no X da janela
@@ -303,7 +304,8 @@ class Jogo:
     def tela_final(self):
         self.finalizando = True
         self.img_tela_final.draw(self.tela)
-        self.escreve_placar(x_score=315,y_score=315,x_vida=345,y_vida=375)
+        self.escreve_placar(x_score=0.41 * self.screen_size[0], y_score=0.48 * self.screen_size[1],
+                            x_vida=0.44 * self.screen_size[0], y_vida=0.65 * self.screen_size[1])
         pygame.display.flip()
         while self.finalizando:
             event = pygame.event.poll()
@@ -316,7 +318,7 @@ class Jogo:
                     self.fundo=Fundo()
                     self.nivel =0
                     self.vida_virus = 0
-                    self.jogador = Jogador([0.45 * width, 0.7 * height], 5)
+                    self.jogador = Jogador([0.45 * self.screen_size[0], 0.7 * self.screen_size[0]], 5)
                     self.loop()
                 elif key == K_ESCAPE:
                     self.run = False
@@ -343,7 +345,8 @@ class Jogo:
             self.atualiza_elementos(dt)
             # Desenhe no back buffer
             self.desenha_elementos()
-            self.escreve_placar()
+            self.escreve_placar(x_score=0.7*self.screen_size[0], y_score=0,
+                                x_vida=0.05*self.screen_size[0], y_vida=0.01*self.screen_size[1])
             self.muda_nivel()
             #texto = self.fonte.render(f"Vidas: {self.jogador.get_lives()}", True, (255, 255, 255), (0, 0, 0))
 
