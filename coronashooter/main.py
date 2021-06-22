@@ -251,11 +251,14 @@ class Jogo:
             #evento para sair do jogo ao clicar no X da janela
             self.trata_eventos_constantes(event)
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_TAB:
+                if event.key == K_ESCAPE:
+                    self.run = False
+                    self.pause = False
+                elif event.key == pygame.K_TAB:
                     self.salva_jogo()
                 #evento para fechar a janela ao apertar esc
-                elif event.key == K_ESCAPE:
-                    self.run = False
+                elif event.key == K_SPACE:
+                    self.run = True
                     self.pause = False
 
     def carrega_jogo(self):
