@@ -153,7 +153,8 @@ class Jogo:
             hitted = pygame.sprite.groupcollide(elemento, list, 1, 0)
             for v in hitted.values():
                 for o in v:
-                    Explosao(o.get_pos(), self.explosoes_frames, self.elementos['explosao'])
+                    print('kkk')
+                    Explosao(o.get_pos(), self.explosoes_frames, self.elementos['explosoes'])
                     random.choice(self.sons_explosao).play()
                     action(o)
             return hitted
@@ -161,7 +162,7 @@ class Jogo:
         elif isinstance(elemento, pygame.sprite.Sprite):
             if pygame.sprite.spritecollide(elemento, list, 1):
                 self.som_atingido.play()
-                Explosao(elemento.get_pos(), self.explosoes_frames, self.elementos['explosao'])
+                Explosao(elemento.get_pos(), self.explosoes_frames, self.elementos['explosoes'])
                 action()
             return elemento.morto
 
@@ -315,7 +316,7 @@ class Jogo:
         self.elementos['virii'] = pygame.sprite.RenderPlain(Virus([120, 50]))
         self.elementos['jogador'] = pygame.sprite.RenderPlain(self.jogador)
         self.elementos['tiros'] = pygame.sprite.RenderPlain()
-        self.elementos['explosao'] = pygame.sprite.RenderPlain()
+        self.elementos['explosoes'] = pygame.sprite.RenderPlain()
         self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
 
         while self.run:
@@ -326,6 +327,8 @@ class Jogo:
             self.manutenção()
             # Atualiza Elementos
             self.atualiza_elementos(dt)
+
+            print(self.elementos['explosoes'])
 
             # Desenhe no back buffer
             self.desenha_elementos()
@@ -487,13 +490,13 @@ class Tiro(ElementoSprite):
             self.add(list)
 
 class Explosao(ElementoSprite):
-    def __init__(self, position, lista_imgs, expl_sprite):
+    def __init__(self, position, lista_imgs, lista_de_explosoes):
         self.frame = 0
-        self.pos = position
         self.lista_imgs = lista_imgs
-        image = lista_imgs[self.frame]
+        image = lista_imgs[0]
         super().__init__(image, position, 0)
-        self.add(expl_sprite)
+        self.add(lista_de_explosoes)
+
         self.ultimo_update = pygame.time.get_ticks()
         self.tempo_de_espera = 30
 
@@ -506,11 +509,10 @@ class Explosao(ElementoSprite):
             print(self.frame, len(self.lista_imgs))
             if self.frame < len(self.lista_imgs):
                 image = self.lista_imgs[self.frame]
-                super().__init__(image, self.pos, 0)
+                self.set_image(image)
             else:
                 print('oi')
                 self.kill()
-                super().kill()
 
 if __name__ == '__main__':
     J = Jogo(fullscreen=False)
