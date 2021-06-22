@@ -2,7 +2,6 @@ import pygame
 import os
 from math import ceil
 
-
 class Fundo:
     """
     Esta classe cria o fundo do jogo
@@ -42,9 +41,10 @@ class Fundo:
         screen.blit(self.image, self.pos)
 
 class Telas:
-    def __init__(self,image="tela_inicial.png"):
+    def __init__(self,image, size):
          image = os.path.join('imagens', image)
          self.image = pygame.image.load(image).convert()
+         self.image= pygame.transform.scale(self.image, size)
          self.pos=(0,0)
 
     def draw(self,screen):
