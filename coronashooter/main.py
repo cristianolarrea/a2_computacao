@@ -176,6 +176,9 @@ class Jogo:
     def trata_eventos_constantes(self, event):
         if event.type == pygame.QUIT:
             self.run = False
+            self.iniciando = False
+            self.finalizando = False
+            self.pause = False
         if event.type == KEYDOWN:
             key = event.key
             if key == K_ESCAPE:
@@ -303,17 +306,17 @@ class Jogo:
                     self.carrega_jogo()
 
     def tela_final(self):
-        final=True
+        self.finalizando = True
         self.img_tela_final.draw(self.tela)
         self.escreve_placar(x_score=100, y_score=100, x_vida=500, y_vida=500)
         pygame.display.flip()
-        while final:
+        while self.finalizando:
             event = pygame.event.poll()
             self.trata_eventos_constantes(event)
             if event.type in (KEYDOWN, KEYUP):
                 key = event.key
                 if key == K_SPACE:
-                    final = False
+                    self.finalizando = False
                     self.run = True
                     self.fundo=Fundo()
                     self.nivel =0
