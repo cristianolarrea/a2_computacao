@@ -73,12 +73,15 @@ class Jogo:
             self.explosoes_frames.append(filename)
 
 
-    def escreve_placar(self,x_score,y_score,x_vida,y_vida):
+    def escreve_placar(self,x_score,y_score,x_vidas,y_vidas):
         heart = "♥"
         vidas = self.fonte.render(f'{self.jogador.get_lives()*heart}', 1, (255, 0, 0))
         score = self.fonte2.render(f'Score: {self.jogador.pontos}', 1, (255,255,255))
-        self.tela.blit(vidas, (x_vida, y_vida))
-        self.tela.blit(score, (x_score, y_score))
+        vidas_rect = vidas.get_rect(midtop=(self.screen_size[0]*x_vidas, self.screen_size[1]*y_vidas))
+        score_rect = score.get_rect(midtop=(self.screen_size[0]*x_score, self.screen_size[1]*y_score))
+
+        self.tela.blit(vidas, vidas_rect)
+        self.tela.blit(score, score_rect)
 
     def manutenção(self):
         r = random.randint(0, 100)
@@ -246,8 +249,8 @@ class Jogo:
     def verifica_pausa(self):
         while(self.pause):
             self.img_tela_pausa.draw(self.tela)
-            self.escreve_placar(x_score=0.41 * self.screen_size[0], y_score=0.55*self.screen_size[1],
-                                x_vida=0.44 * self.screen_size[0], y_vida=0.65*self.screen_size[1])
+            self.escreve_placar(x_score=0.53, y_score=0.55,
+                                x_vidas=0.53, y_vidas=0.65)
             pygame.display.flip()
             event = pygame.event.poll()
             #evento para sair do jogo ao clicar no X da janela
@@ -304,8 +307,8 @@ class Jogo:
     def tela_final(self):
         self.finalizando = True
         self.img_tela_final.draw(self.tela)
-        self.escreve_placar(x_score=0.41 * self.screen_size[0], y_score=0.48 * self.screen_size[1],
-                            x_vida=0.44 * self.screen_size[0], y_vida=0.65 * self.screen_size[1])
+        self.escreve_placar(x_score=0.51, y_score=0.48,
+                            x_vidas=0.45, y_vidas=0.65)
         pygame.display.flip()
         while self.finalizando:
             event = pygame.event.poll()
@@ -345,8 +348,8 @@ class Jogo:
             self.atualiza_elementos(dt)
             # Desenhe no back buffer
             self.desenha_elementos()
-            self.escreve_placar(x_score=0.7*self.screen_size[0], y_score=0,
-                                x_vida=0.05*self.screen_size[0], y_vida=0.01*self.screen_size[1])
+            self.escreve_placar(x_score=0.75, y_score=0,
+                                x_vidas=0.15, y_vidas=0)
             self.muda_nivel()
             #texto = self.fonte.render(f"Vidas: {self.jogador.get_lives()}", True, (255, 255, 255), (0, 0, 0))
 
