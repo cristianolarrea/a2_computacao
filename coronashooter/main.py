@@ -1,6 +1,3 @@
-# Música de fundo de Zefz
-import ntpath
-import time
 from os import path
 import pickle
 import pygame
@@ -17,9 +14,6 @@ from fundo import (Fundo,
                    Telas)
 from elementos import ElementoSprite
 import random
-
-width = 500
-height = 500
 
 class Jogo:
     def __init__(self, fullscreen=False):
