@@ -2,15 +2,15 @@
 O jogo chama-se "Corona Shooter" e trata-se de naves espaciais inspirado em uma pandemia de coronavirus.
 
 ## Integrantes
-Bianca Dias de Carvalho - B43663 - 211708009
+- Bianca Dias de Carvalho - B43663 - 211708009
 
-Cristiano Júnior Larréa Leal - B43645 - 211708005
+- Cristiano Júnior Larréa Leal - B43645 - 211708005
 
-Daniel Jacob Tonn - B43897 - 211704030
+- Daniel Jacob Tonn - B43897 - 211704030
 
-Raul Lomonte Figueiredo - B44399 - 211708043
+- Raul Lomonte Figueiredo - B44399 - 211708043
 
-Sylvio Jorge Pastene Helt - B43013 - 211708011
+- Sylvio Jorge Pastene Helt - B43013 - 211708011
 
 ## Pré-requisitos
 Antes de rodar este jogo você precisa ter instalado em seu computador o pygame e o pickle-mixin.
