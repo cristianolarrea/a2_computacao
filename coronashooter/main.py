@@ -84,7 +84,7 @@ class Jogo:
         vidas = self.fonte.render(f'{self.jogador.get_lives()*heart}', 1, (255, 0, 0))
         score = self.fonte2.render(f'Score: {self.jogador.pontos}', 1, (255,255,255))
         self.tela.blit(vidas, (x_vida, y_vida))
-        self.tela.blit(score, ( x_score, y_score))
+        self.tela.blit(score, (x_score, y_score))
 
     def manutenção(self):
         r = random.randint(0, 100)
@@ -160,7 +160,6 @@ class Jogo:
             hitted = pygame.sprite.groupcollide(elemento, list, 1, 0)
             for v in hitted.values():
                 for o in v:
-                    print('kkk')
                     Explosao(o.get_pos(), self.explosoes_frames, self.elementos['explosoes'])
                     random.choice(self.sons_explosao).play()
                     action(o)
@@ -275,13 +274,15 @@ class Jogo:
         self.nivel = teste['nivel']
         self.jogador.set_pontos(teste['pontos'])
         self.jogador.set_lives(teste['vidas'])
+        self.jogador.set_pos(teste['pos_jogador'])
         self.constroi_nivel()
         print('Jogo carregado com sucesso! Nível do jogo anterior' + str(teste))
 
     def salva_jogo(self):
         pickle.dump({'nivel':self.nivel,
                      'pontos':self.jogador.get_pontos(),
-                     'vidas':self.jogador.get_lives()}, open("save.p", "wb"))
+                     'vidas':self.jogador.get_lives(),
+                     'pos_jogador':self.jogador.get_pos()},open("save.p", "wb"))
         print('Jogo salvo com sucesso')  # substituir por mensagem de verdade
 
     def tela_inicial(self):
