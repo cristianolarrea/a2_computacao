@@ -79,7 +79,7 @@ class Jogo:
             self.explosoes_frames.append(filename)
 
 
-    def escreve_placar(self,x_score=750,y_score=30,x_vida=30,y_vida=30):
+    def escreve_placar(self,x_score=550,y_score=30,x_vida=30,y_vida=30):
         heart = "♥"
         vidas = self.fonte.render(f'{self.jogador.get_lives()*heart}', 1, (255, 0, 0))
         score = self.fonte2.render(f'Score: {self.jogador.pontos}', 1, (255,255,255))
@@ -250,7 +250,7 @@ class Jogo:
     def verifica_pausa(self):
         while(self.pause):
             self.img_tela_pausa.draw(self.tela)
-            self.escreve_placar(x_score=100,y_score=200,x_vida=500,y_vida=500)
+            self.escreve_placar(x_score=315,y_score=415,x_vida=345,y_vida=375)
             pygame.display.flip()
             event = pygame.event.poll()
             #evento para sair do jogo ao clicar no X da janela
@@ -305,7 +305,7 @@ class Jogo:
     def tela_final(self):
         final=True
         self.img_tela_final.draw(self.tela)
-        self.escreve_placar(x_score=100, y_score=100, x_vida=500, y_vida=500)
+        self.escreve_placar(x_score=315,y_score=315,x_vida=345,y_vida=375)
         pygame.display.flip()
         while final:
             event = pygame.event.poll()
@@ -320,6 +320,9 @@ class Jogo:
                     self.vida_virus = 0
                     self.jogador = Jogador([0.45 * width, 0.7 * height], 5)
                     self.loop()
+                elif key == K_ESCAPE:
+                    self.run = False
+                    final = False
 
     def loop(self):
         clock = pygame.time.Clock()
