@@ -38,7 +38,7 @@ class Jogo:
         for som in ['som_explosao1.wav', 'som_explosao2.wav', 'som_explosao3.wav']:
             self.sons_explosao.append(pygame.mixer.Sound(path.join(sons_dir, som)))
 
-        pygame.mixer.music.load(path.join(sons_dir, 'background_music.ogg'))
+#        pygame.mixer.music.load(path.join(sons_dir, 'background_music.ogg'))
         pygame.mixer.music.set_volume(0.75)
 
         # inicializações relativas à tela
@@ -85,6 +85,8 @@ class Jogo:
         virii = self.elementos["virii"]
         if r > (10 * len(virii)):
             lives = self.vida_virus
+            if self.nivel == 2:
+                enemy = Virus([0,0], lives, image='virus-chefao.png')
             if self.nivel == 1:
                 enemy = Virus([0, 0], lives,image='virus2.png')
             if self.nivel == 0:
@@ -105,15 +107,29 @@ class Jogo:
             self.jogador.set_lives(self.jogador.get_lives() + 3)
             self.jogador.set_pontos(self.jogador.get_pontos() + 1)
             for v in self.elementos['virii']:
+                v.kill()
                 v.set_lives(2)
                 old_size = v.get_size()
-                v.set_image('virus2.png')
                 v.scale(old_size)
+            self.constroi_nivel()
+        if xp == 20:
+            self.nivel = 2
+            self.jogador.set_lives(self.jogador.get_lives() + 3)
+            self.jogador.set_pontos(self.jogador.get_pontos() + 1)
+            for v in self.elementos['virii']:
+                v.kill()
+                v.set_lives(20)
+                old_size = v.get_size()
+                v.scale(old_size)
+            self.constroi_nivel()
 
     def constroi_nivel(self):
         if self.nivel == 1:
             self.fundo = Fundo("sky.png")
             self.vida_virus = 1
+        if self.nivel == 2:
+            self.fundo = Fundo("street.jpg")
+            self.vida_virus = 20
 
     def atualiza_elementos(self, dt):
         self.fundo.update(dt)
@@ -293,7 +309,7 @@ class Jogo:
 
     def loop(self):
         clock = pygame.time.Clock()
-        pygame.mixer.music.play(loops=-1)
+#        pygame.mixer.music.play(loops=-1)
         self.tela_inicial()
         dt = 16
         self.elementos['virii'] = pygame.sprite.RenderPlain(Virus([120, 50]))
@@ -315,7 +331,6 @@ class Jogo:
             self.desenha_elementos()
             self.escreve_placar()
             self.muda_nivel()
-            self.constroi_nivel()
             #texto = self.fonte.render(f"Vidas: {self.jogador.get_lives()}", True, (255, 255, 255), (0, 0, 0))
 
             pygame.display.flip()
