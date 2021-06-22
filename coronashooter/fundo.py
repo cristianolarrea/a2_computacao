@@ -49,4 +49,3 @@ class Telas:
 
     def draw(self,screen):
         screen.blit(self.image,self.pos)
-        pygame.display.flip()
