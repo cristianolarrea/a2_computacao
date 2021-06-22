@@ -18,13 +18,12 @@ from fundo import (Fundo,
 from elementos import ElementoSprite
 import random
 
-width = 1000
-height = 800
+width = 500
+height = 500
 
 class Jogo:
-    def __init__(self, size=(width, height), fullscreen=False):
+    def __init__(self, fullscreen=False):
         self.elementos = {}
-
         # inicializa o pygame
         pygame.init()
         pygame.font.init()
@@ -46,15 +45,21 @@ class Jogo:
         flags = pygame.DOUBLEBUF
         if fullscreen:
             flags |= pygame.FULLSCREEN
-        self.tela = pygame.display.set_mode(size, flags=flags, depth=16)
-        self.fundo = Fundo()
-        self.imagem_inicial = Telas()
-        self.iniciando = True
-        self.imagem_final = Telas('tela_final.png')
-        self.tela_pause = Telas('tela_pause.png')
-        self.screen_size = self.tela.get_size()
 
-        self.jogador = Jogador([0.45*width, 0.7*height], 5)
+        infoObject = pygame.display.Info()
+        user_screen = (infoObject.current_w, infoObject.current_h)
+        dim = int(user_screen[1]*0.85)
+        self.screen_size = (int(dim*1.2), dim)
+
+
+        self.tela = pygame.display.set_mode(self.screen_size, flags=flags, depth=16)
+        self.fundo = Fundo()
+        self.iniciando = True
+        self.img_tela_inicial = Telas('tela_inicial.png', self.screen_size)
+        self.img_tela_final = Telas('tela_final.png',self.screen_size)
+        self.img_tela_pausa = Telas('tela_pause.png',self.screen_size)
+
+        self.jogador = Jogador([0.45*self.screen_size[0], self.screen_size[1]], 5)
         self.interval = 0
         self.nivel = 0
         self.fonte = pygame.font.SysFont('arial', 42)
@@ -244,7 +249,7 @@ class Jogo:
     # Verifica se o usuário pausou o jogo e o mantém em uma tela de pausa
     def verifica_pausa(self):
         while(self.pause):
-            self.tela_pause.draw(self.tela)
+            self.img_tela_pausa.draw(self.tela)
             self.escreve_placar(x_score=100,y_score=200,x_vida=500,y_vida=500)
             pygame.display.flip()
             event = pygame.event.poll()
@@ -277,7 +282,7 @@ class Jogo:
         print('Jogo salvo com sucesso')  # substituir por mensagem de verdade
 
     def tela_inicial(self):
-        self.imagem_inicial.draw(self.tela)
+        self.img_tela_inicial.draw(self.tela)
 
         pygame.display.flip()
         while self.iniciando:
@@ -299,7 +304,7 @@ class Jogo:
 
     def tela_final(self):
         final=True
-        self.imagem_final.draw(self.tela)
+        self.img_tela_final.draw(self.tela)
         self.escreve_placar(x_score=100, y_score=100, x_vida=500, y_vida=500)
         pygame.display.flip()
         while final:
