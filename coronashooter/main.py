@@ -112,7 +112,7 @@ class Jogo:
                 v.set_lives(2)
                 old_size = v.get_size()
                 v.scale(old_size)
-            self.constroi_nivel()
+                self.constroi_nivel()
         if xp == 20:
             self.nivel = 2
             self.jogador.set_lives(self.jogador.get_lives() + 3)
@@ -122,7 +122,7 @@ class Jogo:
                 v.set_lives(20)
                 old_size = v.get_size()
                 v.scale(old_size)
-            self.constroi_nivel()
+                self.constroi_nivel()
 
     def constroi_nivel(self):
         if self.nivel == 1:
@@ -260,6 +260,7 @@ class Jogo:
         self.nivel = teste['nivel']
         self.jogador.set_pontos(teste['pontos'])
         self.jogador.set_lives(teste['vidas'])
+        self.constroi_nivel()
         print('Jogo carregado com sucesso! Nível do jogo anterior' + str(teste))
 
     def salva_jogo(self):
@@ -315,7 +316,7 @@ class Jogo:
 #        pygame.mixer.music.play(loops=-1)
         self.tela_inicial()
         dt = 16
-        self.elementos['virii'] = pygame.sprite.RenderPlain(Virus([120, 50]))
+        self.elementos['virii'] = pygame.sprite.RenderPlain()
         self.elementos['jogador'] = pygame.sprite.RenderPlain(self.jogador)
         self.elementos['tiros'] = pygame.sprite.RenderPlain()
         self.elementos['explosoes'] = pygame.sprite.RenderPlain()
@@ -329,9 +330,6 @@ class Jogo:
             self.manutenção()
             # Atualiza Elementos
             self.atualiza_elementos(dt)
-
-            print(self.elementos['explosoes'])
-
             # Desenhe no back buffer
             self.desenha_elementos()
             self.escreve_placar()
@@ -502,18 +500,15 @@ class Explosao(ElementoSprite):
         self.ultimo_update = pygame.time.get_ticks()
         self.tempo_de_espera = 30
 
-        print(len(self.lista_imgs))
     def update(self, dt):
         agora = pygame.time.get_ticks()
         if agora - self.ultimo_update > self.tempo_de_espera:
             self.ultimo_update = agora
             self.frame += 1
-            print(self.frame, len(self.lista_imgs))
             if self.frame < len(self.lista_imgs):
                 image = self.lista_imgs[self.frame]
                 self.set_image(image)
             else:
-                print('oi')
                 self.kill()
 
 if __name__ == '__main__':
