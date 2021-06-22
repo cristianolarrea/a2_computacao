@@ -38,7 +38,7 @@ class Jogo:
         for som in ['som_explosao1.wav', 'som_explosao2.wav', 'som_explosao3.wav']:
             self.sons_explosao.append(pygame.mixer.Sound(path.join(sons_dir, som)))
 
-#        pygame.mixer.music.load(path.join(sons_dir, 'background_music.ogg'))
+        pygame.mixer.music.load(path.join(sons_dir, 'background_music.mp3'))
         pygame.mixer.music.set_volume(0.75)
 
         # inicializações relativas à tela
@@ -318,7 +318,7 @@ class Jogo:
 
     def loop(self):
         clock = pygame.time.Clock()
-#        pygame.mixer.music.play(loops=-1)
+        pygame.mixer.music.play(loops=-1)
         self.tela_inicial()
         dt = 16
         self.elementos['virii'] = pygame.sprite.RenderPlain()
