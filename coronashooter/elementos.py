@@ -52,3 +52,7 @@ class ElementoSprite(pygame.sprite.Sprite):
     def scale(self, new_size):
         self.image = pygame.transform.scale(self.image, new_size)
 
+    # Carrega uma imagem, que precisa já estar na pasta imagens
+    def set_image(self, image):
+        image = os.path.join('imagens', image)
+        self.image = pygame.image.load(image)

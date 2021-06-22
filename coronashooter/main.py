@@ -100,12 +100,15 @@ class Jogo:
 
     def muda_nivel(self):
         xp = self.jogador.get_pontos()
-        if xp == 20:
+        if xp == 5:
             self.nivel = 1
             self.jogador.set_lives(self.jogador.get_lives() + 3)
             self.jogador.set_pontos(self.jogador.get_pontos() + 1)
             for v in self.elementos['virii']:
                 v.set_lives(2)
+                old_size = v.get_size()
+                v.set_image('virus2.png')
+                v.scale(old_size)
 
     def constroi_nivel(self):
         if self.nivel == 1:
