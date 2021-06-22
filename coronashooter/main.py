@@ -305,6 +305,7 @@ class Jogo:
                     self.fundo=Fundo()
                     self.nivel =0
                     self.vida_virus = 0
+                    self.jogador = Jogador([0.45 * width, 0.7 * height], 5)
                     self.loop()
 
     def loop(self):
