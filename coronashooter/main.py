@@ -57,7 +57,8 @@ class Jogo:
         self.interval = 0
         self.nivel = 0
         self.fonte = pygame.font.SysFont('arial', 42)
-        self.fonte2 = pygame.font.SysFont('comicsansms', 42)
+        fonte_dir = path.join(path.dirname(__file__), 'fonte')
+        self.fonte2 = pygame.font.Font(path.join(fonte_dir, 'fonte.ttf'), 42)
         self.vida_virus = 0
 
         pygame.mouse.set_visible(0)
