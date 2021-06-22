@@ -47,7 +47,9 @@ class Jogo:
             flags |= pygame.FULLSCREEN
 
         infoObject = pygame.display.Info()
-        self.screen_size = (infoObject.current_w, infoObject.current_h)
+        user_screen = (infoObject.current_w, infoObject.current_h)
+        dim = int(user_screen[1]*0.85)
+        self.screen_size = (int(dim*1.2), dim)
 
 
         self.tela = pygame.display.set_mode(self.screen_size, flags=flags, depth=16)
@@ -57,7 +59,7 @@ class Jogo:
         self.img_tela_final = Telas('tela_final.png',self.screen_size)
         self.img_tela_pausa = Telas('tela_pause.png',self.screen_size)
 
-        self.jogador = Jogador([0.45*width, 0.7*height], 5)
+        self.jogador = Jogador([0.45*self.screen_size[0], self.screen_size[1]], 5)
         self.interval = 0
         self.nivel = 0
         self.fonte = pygame.font.SysFont('arial', 42)
