@@ -73,12 +73,12 @@ class Jogo:
             self.explosoes_frames.append(filename)
 
 
-    def escreve_placar(self):
+    def escreve_placar(self,x_score=750,y_score=30,x_vida=30,y_vida=30):
         heart = "♥"
         vidas = self.fonte.render(f'{self.jogador.get_lives()*heart}', 1, (255, 0, 0))
         score = self.fonte2.render(f'Score: {self.jogador.pontos}', 1, (255,255,255))
-        self.tela.blit(vidas, (30, 30))
-        self.tela.blit(score, (self.screen_size[0] - 300, 30))
+        self.tela.blit(vidas, (x_vida, y_vida))
+        self.tela.blit(score, ( x_score, y_score))
 
     def manutenção(self):
         r = random.randint(0, 100)
@@ -239,6 +239,8 @@ class Jogo:
     def verifica_pausa(self):
         while(self.pause):
             self.tela_pause.draw(self.tela)
+            self.escreve_placar(x_score=100,y_score=200,x_vida=500,y_vida=500)
+            pygame.display.flip()
             event = pygame.event.poll()
             #evento para sair do jogo ao clicar no X da janela
             if event.type == pygame.QUIT:
@@ -272,6 +274,7 @@ class Jogo:
     def tela_inicial(self):
         self.imagem_inicial.draw(self.tela)
 
+        pygame.display.flip()
         while self.iniciando:
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
@@ -292,6 +295,8 @@ class Jogo:
     def tela_final(self):
         final=True
         self.imagem_final.draw(self.tela)
+        self.escreve_placar(x_score=100, y_score=100, x_vida=500, y_vida=500)
+        pygame.display.flip()
         while final:
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
