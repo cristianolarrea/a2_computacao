@@ -57,6 +57,7 @@ class Jogo:
         self.interval = 0
         self.nivel = 0
         self.fonte = pygame.font.SysFont('arial', 42)
+        self.fonte2 = pygame.font.SysFont('comicsansms', 42)
         self.vida_virus = 0
 
         pygame.mouse.set_visible(0)
@@ -75,7 +76,7 @@ class Jogo:
     def escreve_placar(self):
         heart = "♥"
         vidas = self.fonte.render(f'{self.jogador.get_lives()*heart}', 1, (255, 0, 0))
-        score = self.fonte.render(f'Score: {self.jogador.pontos}', 1, (0,128,0))
+        score = self.fonte2.render(f'Score: {self.jogador.pontos}', 1, (255,255,255))
         self.tela.blit(vidas, (30, 30))
         self.tela.blit(score, (self.screen_size[0] - 300, 30))
 
