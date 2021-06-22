@@ -11,7 +11,7 @@ from pygame.locals import (KEYDOWN,
                            K_RIGHT,
                            QUIT,
                            K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL,
-                           K_SPACE,K_TAB, K_p
+                           K_SPACE,K_TAB, K_m
                            )
 from fundo import (Fundo,
                    Telas)
@@ -38,6 +38,7 @@ class Jogo:
         for som in ['som_explosao1.wav', 'som_explosao2.wav', 'som_explosao3.wav']:
             self.sons_explosao.append(pygame.mixer.Sound(path.join(sons_dir, som)))
 
+        self.music_paused = False
         pygame.mixer.music.load(path.join(sons_dir, 'background_music.mp3'))
         pygame.mixer.music.set_volume(0.75)
 
@@ -167,19 +168,24 @@ class Jogo:
                 action()
             return elemento.morto
 
-    def trata_eventos(self):
-        event = pygame.event.poll()
+    def trata_eventos_constantes(self, event):
         if event.type == pygame.QUIT:
             self.run = False
-
         if event.type == KEYDOWN:
             key = event.key
             if key == K_ESCAPE:
                 self.run = False
+            elif key == K_m:
+                pygame.mixer.music.unpause() if self.music_paused else pygame.mixer.music.pause()
+                self.music_paused = not self.music_paused
 
-            elif key == K_SPACE:
+    def trata_eventos_jogando(self):
+        event = pygame.event.poll()
+        self.trata_eventos_constantes(event)
+        if event.type == KEYDOWN:
+            key = event.key
+            if key == K_SPACE:
                 self.pause = True
-
             elif key in (K_LCTRL, K_RCTRL):
                 self.interval = 0
                 self.jogador.atira(self.elementos["tiros"], self.som_disparo)
@@ -243,13 +249,9 @@ class Jogo:
             pygame.display.flip()
             event = pygame.event.poll()
             #evento para sair do jogo ao clicar no X da janela
-            if event.type == pygame.QUIT:
-                self.run = False
-                self.pause=False
+            self.trata_eventos_constantes(event)
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    self.pause = False
-                elif event.key == pygame.K_TAB:
+                if event.key == pygame.K_TAB:
                     self.salva_jogo()
                 #evento para fechar a janela ao apertar esc
                 elif event.key == K_ESCAPE:
@@ -277,9 +279,7 @@ class Jogo:
         pygame.display.flip()
         while self.iniciando:
             event = pygame.event.poll()
-            if event.type == pygame.QUIT:
-                self.run = False
-                self.iniciando=False
+            self.trata_eventos_constantes(event)
             if event.type in (KEYDOWN, KEYUP):
                 key = event.key
                 if key == K_ESCAPE:
@@ -287,6 +287,8 @@ class Jogo:
                     self.iniciando = False
                 if key == K_SPACE:
                     self.iniciando = False
+                if key == K_SPACE:
+                    self.musica_ligada = False
                 # Caso o usuário aperte TAB, carrega o jogo salvo
                 if key == K_TAB:
                     self.iniciando = False
@@ -299,14 +301,9 @@ class Jogo:
         pygame.display.flip()
         while final:
             event = pygame.event.poll()
-            if event.type == pygame.QUIT:
-                self.run = False
-                final=False
+            self.trata_eventos_constantes(event)
             if event.type in (KEYDOWN, KEYUP):
                 key = event.key
-                if key == K_ESCAPE:
-                    self.run = False
-                    final=False
                 if key == K_SPACE:
                     final = False
                     self.run = True
@@ -329,7 +326,7 @@ class Jogo:
 
         while self.run:
             clock.tick(1000/dt)
-            self.trata_eventos()
+            self.trata_eventos_jogando()
             self.verifica_pausa()
             self.ação_elemento()
             self.manutenção()
