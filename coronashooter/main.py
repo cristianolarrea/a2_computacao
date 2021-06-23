@@ -52,6 +52,7 @@ class Jogo:
         self.img_tela_inicial = Telas('tela_inicial.png', self.screen_size)
         self.img_tela_final = Telas('tela_final.png',self.screen_size)
         self.img_tela_pausa = Telas('tela_pause.png',self.screen_size)
+        self.img_tela_win = Telas('tela_win.png',self.screen_size)
 
         self.jogador = Jogador([0.45*self.screen_size[0], 0.8*self.screen_size[1]], 5)
         self.interval = 0
@@ -250,8 +251,8 @@ class Jogo:
     def verifica_pausa(self):
         while(self.pause):
             self.img_tela_pausa.draw(self.tela)
-            self.escreve_placar(x_score=0.53, y_score=0.55,
-                                x_vidas=0.53, y_vidas=0.65)
+            self.escreve_placar(x_score=0.53, y_score=0.65,
+                                x_vidas=0.53, y_vidas=0.70)
             pygame.display.flip()
             event = pygame.event.poll()
             #evento para sair do jogo ao clicar no X da janela
@@ -308,8 +309,8 @@ class Jogo:
     def tela_final(self):
         self.finalizando = True
         self.img_tela_final.draw(self.tela)
-        self.escreve_placar(x_score=0.51, y_score=0.48,
-                            x_vidas=0.45, y_vidas=0.65)
+        self.escreve_placar(x_score=0.51, y_score=0.51,
+                            x_vidas=0.45, y_vidas=0.53)
         pygame.display.flip()
         while self.finalizando:
             event = pygame.event.poll()
