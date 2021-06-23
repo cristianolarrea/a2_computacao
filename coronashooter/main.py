@@ -59,6 +59,7 @@ class Jogo:
         self.jogador = Jogador([0.45*self.screen_size[0], 0.8*self.screen_size[1]], 5)
         self.interval = 0
         self.nivel = 0
+        self.highscore = 0
         self.fonte = pygame.font.SysFont('arial', 42)
         fonte_dir = path.join(path.dirname(__file__), 'fonte')
         try:
@@ -87,9 +88,17 @@ class Jogo:
         score = self.fonte2.render(f'Score: {self.jogador.pontos}', 1, (255,255,255))
         vidas_rect = vidas.get_rect(midtop=(self.screen_size[0]*x_vidas, self.screen_size[1]*y_vidas))
         score_rect = score.get_rect(midtop=(self.screen_size[0]*x_score, self.screen_size[1]*y_score))
-
         self.tela.blit(vidas, vidas_rect)
         self.tela.blit(score, score_rect)
+
+    def escreve_recorde(self, x_score,y_score,x_high,y_high):
+        score = self.fonte2.render(f'Score: {self.jogador.pontos}', 1, (255,255,255))
+        high = self.fonte2.render(f'Recorde: {self.highscore}', 1, (255,255,255))
+        score_rect = score.get_rect(midtop=(self.screen_size[0]*x_score, self.screen_size[1]*y_score))
+        high_rect = score.get_rect(midtop=(self.screen_size[0]*x_high, self.screen_size[1]*y_high))
+        self.tela.blit(score, score_rect)
+        self.tela.blit(high, high_rect)
+
 
     def manutenção(self):
         r = random.randint(0, 100)
@@ -329,11 +338,21 @@ class Jogo:
                     self.iniciando = False
                     self.carrega_jogo()
 
+    def verifica_recorde(self):
+        try:
+            self.highscore = pickle.load(open("highscore.p", "rb"))
+        except:
+            self.highscore = 0
+
+        if(self.jogador.pontos) > self.highscore:
+            pickle.dump(self.jogador.pontos, open("highscore.p", "wb"))
+            self.highscore = self.jogador.pontos
+
     def tela_final(self):
         self.finalizando = True
         self.img_tela_final.draw(self.tela)
-        self.escreve_placar(x_score=0.51, y_score=0.51,
-                            x_vidas=0.45, y_vidas=0.53)
+        self.verifica_recorde()
+        self.escreve_recorde(x_score=0.51, y_score=0.46, x_high=0.51, y_high=0.56)
         pygame.display.flip()
         while self.finalizando:
             event = pygame.event.poll()
