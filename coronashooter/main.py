@@ -8,7 +8,7 @@ from pygame.locals import (KEYDOWN,
                            K_RIGHT,
                            QUIT,
                            K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL,
-                           K_SPACE,K_TAB, K_m
+                           K_SPACE,K_TAB, K_m, K_s
                            )
 from fundo import (Fundo,
                    Telas)
@@ -32,7 +32,8 @@ class Jogo:
             self.sons_explosao.append(pygame.mixer.Sound(path.join(sons_dir, som)))
 
         self.music_paused = False
-        pygame.mixer.music.load(path.join(sons_dir, 'background_music.mp3'))
+        self.som_paused = False
+#        pygame.mixer.music.load(path.join(sons_dir, 'background_music.mp3'))
         pygame.mixer.music.set_volume(0.75)
 
         # inicializações relativas à tela
@@ -184,6 +185,22 @@ class Jogo:
             elif key == K_m:
                 pygame.mixer.music.unpause() if self.music_paused else pygame.mixer.music.pause()
                 self.music_paused = not self.music_paused
+            elif key == K_s:
+                if self.som_paused:
+                    for som in [self.som_disparo, self.som_atingido]:
+                        pygame.mixer.Sound.set_volume(som, 100)
+                    for som in self.sons_explosao:
+                            pygame.mixer.Sound.set_volume(som, 100)
+                    self.som_paused = not self.som_paused
+                else:
+                    for som in [self.som_disparo, self.som_atingido]:
+                        pygame.mixer.Sound.set_volume(som, 0)
+                    for som in self.sons_explosao:
+                        pygame.mixer.Sound.set_volume(som, 0)
+                    self.som_paused = not self.som_paused
+
+
+
 
     def trata_eventos_jogando(self):
         event = pygame.event.poll()
@@ -331,7 +348,7 @@ class Jogo:
 
     def loop(self):
         clock = pygame.time.Clock()
-        pygame.mixer.music.play(loops=-1)
+#        pygame.mixer.music.play(loops=-1)
         self.tela_inicial()
         dt = 16
         self.elementos['virii'] = pygame.sprite.RenderPlain()
