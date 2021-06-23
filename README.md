@@ -23,10 +23,10 @@ pip install pickle-mixin
 
 ## O Jogo
 
-Existem três fases, sendo a última com o chefão. Na primeira fase os vírus estão no espaço, vindo em direção à Terra e 
+Existem três fases. Na primeira fase os vírus estão no espaço, vindo em direção à Terra e 
 para evitar a completa destruição do nosso planeta, você foi enviado ao espaço para destrui-los com a vacina. Na segunda, 
 eles chegam ao céu e estão mais fortes devido às mutações, sendo assim, para matá-los são necessárias duas doses da 
-vacina. Na última fase os vírus já estão nas ruas, sua missão é matá-los.
+vacina. Na última fase os vírus já estão nas ruas, e sua missão é matar a maior quantidade de vírus possíveis.
 
 ## Teclas de Controle
 - Setas: Movimentar a nave (seringa).
