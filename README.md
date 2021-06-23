@@ -33,11 +33,11 @@ vacina. Na última fase os vírus já estão nas ruas, e sua missão é matar a 
 
 - Ctrl: Atirar.
 
-- Espaço: Iniciar / pausar / continuar o jogo.
+- Espaço: Iniciar / Pausar / Continuar o jogo.
 
 - Esc: Sair do jogo.
 
-- Tab: Salvar o jogo.
+- Tab: Salvar o jogo / Carregar jogo salvo.
 
 - m: Desligar a música.
 
