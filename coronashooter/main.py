@@ -19,6 +19,7 @@ class Jogo:
     def __init__(self, fullscreen=False):
         self.elementos = {}
         # inicializa o pygame
+        pygame.mixer.pre_init()
         pygame.init()
         pygame.font.init()
         pygame.mixer.init()
@@ -33,7 +34,7 @@ class Jogo:
 
         self.music_paused = False
         self.som_paused = False
-#        pygame.mixer.music.load(path.join(sons_dir, 'background_music.mp3'))
+        pygame.mixer.music.load(path.join(sons_dir, 'background_music.wav'))
         pygame.mixer.music.set_volume(0.75)
 
         # inicializações relativas à tela
@@ -113,7 +114,7 @@ class Jogo:
 
     def muda_nivel(self):
         xp = self.jogador.get_pontos()
-        if xp == 5:
+        if xp == 20:
             self.nivel = 1
             self.jogador.set_lives(self.jogador.get_lives() + 3)
             self.jogador.set_pontos(self.jogador.get_pontos() + 1)
@@ -123,13 +124,13 @@ class Jogo:
                 old_size = v.get_size()
                 v.scale(old_size)
                 self.constroi_nivel()
-        if xp == 20:
+        if xp == 60:
             self.nivel = 2
             self.jogador.set_lives(self.jogador.get_lives() + 3)
             self.jogador.set_pontos(self.jogador.get_pontos() + 1)
             for v in self.elementos['virii']:
                 v.kill()
-                v.set_lives(20)
+                v.set_lives(4)
                 old_size = v.get_size()
                 v.scale(old_size)
                 self.constroi_nivel()
@@ -140,7 +141,7 @@ class Jogo:
             self.vida_virus = 1
         if self.nivel == 2:
             self.fundo = Fundo("street.jpg")
-            self.vida_virus = 20
+            self.vida_virus = 4
 
     def atualiza_elementos(self, dt):
         self.fundo.update(dt)
@@ -353,7 +354,7 @@ class Jogo:
 
     def loop(self):
         clock = pygame.time.Clock()
-#        pygame.mixer.music.play(loops=-1)
+        pygame.mixer.music.play(loops=-1)
         self.tela_inicial()
         dt = 16
         self.elementos['virii'] = pygame.sprite.RenderPlain()
@@ -382,7 +383,7 @@ class Jogo:
 
 class Nave(ElementoSprite):
     def __init__(self, position, lives=0, speed=[0, 0], image=None, new_size=[83, 248]):
-        self.acceleration = [3, 3]
+        self.acceleration = [4, 4]
         if not image:
             image = "seringa.png"
         super().__init__(image, position, speed, new_size)
