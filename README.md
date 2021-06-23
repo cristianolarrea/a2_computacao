@@ -26,7 +26,7 @@ pip install pickle-mixin
 Existem três fases. Na primeira fase os vírus estão no espaço, vindo em direção à Terra e 
 para evitar a completa destruição do nosso planeta, você foi enviado ao espaço para destrui-los com a vacina. Na segunda, 
 eles chegam ao céu e estão mais fortes devido às mutações, sendo assim, para matá-los são necessárias duas doses da 
-vacina. Na última fase os vírus já estão nas ruas, e sua missão é matar a maior quantidade de vírus possíveis, sendo agoras necessárias quatro doeses.
+vacina. Na última fase os vírus já estão nas ruas, e sua missão é matar a maior quantidade de vírus possíveis, sendo agora necessárias quatro doeses.
 
 ## Teclas de Controle
 - Setas: Movimentar a nave (seringa).
