@@ -1,5 +1,6 @@
 # Corona Shooter
 O jogo chama-se "Corona Shooter" e trata-se de naves espaciais inspirado em uma pandemia de coronavirus.
+Link para o nosso repositório do github: [A2 - Introdução a Computação](https://github.com/cristianolarrea/a2_computacao)
 
 ## Integrantes
 - Bianca Dias de Carvalho - B43663 - 211708009
@@ -22,19 +23,22 @@ pip install pickle-mixin
 
 ## O Jogo
 
-Existem três fases, sendo a última com o chefão. Através das fases é contada a história da chegada do corona
-à Terra, sendo assim, na primeira fase a nave se encontra no espaço, na segunda ela chega ao céu e na 
-última ela chega ao nosso planeta. 
+Existem três fases, sendo a última com o chefão. Na primeira fase os vírus estão no espaço, vindo em direção à Terra e 
+para evitar a completa destruição do nosso planeta, você foi enviado ao espaço para destrui-los com a vacina. Na segunda, 
+eles chegam ao céu e estão mais fortes devido às mutações, sendo assim, para matá-los são necessárias duas doses da 
+vacina. Na última fase só há um virus, que é muito mais forte e já está nas ruas, sua missão é detê-lo.
 
 ## Teclas de Controle
 - Setas: Movimentar a nave (seringa).
 
 - Ctrl: Atirar.
 
-- Espaço: Iniciar / pausar/ continuar o jogo.
+- Espaço: Iniciar / pausar / continuar o jogo.
 
 - Esc: Sair do jogo.
 
 - Tab: Salvar o jogo.
+
+- m: Desligar a música.
 
 # Fim
