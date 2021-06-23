@@ -196,6 +196,7 @@ class Jogo:
             key = event.key
             if key == K_ESCAPE:
                 self.run = False
+                self.finalizando = False
             elif key == K_m:
                 pygame.mixer.music.unpause() if self.music_paused else pygame.mixer.music.pause()
                 self.music_paused = not self.music_paused
@@ -329,6 +330,7 @@ class Jogo:
                 if key == K_ESCAPE:
                     self.run = False
                     self.iniciando = False
+                    self.finalizando = False
                 if key == K_SPACE:
                     self.iniciando = False
                 if key == K_SPACE:
@@ -367,9 +369,6 @@ class Jogo:
                     self.vida_virus = 0
                     self.jogador = Jogador([0.45 * self.screen_size[0], 0.7 * self.screen_size[0]], 5)
                     self.loop()
-                elif key == K_ESCAPE:
-                    self.run = False
-                    final = False
 
     def loop(self):
         clock = pygame.time.Clock()
