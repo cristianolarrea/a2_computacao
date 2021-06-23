@@ -1,19 +1,20 @@
 from os import path
 import pickle
 import pygame
-import random
+from random import randrange
 from pygame.locals import (KEYDOWN,
                            KEYUP,
                            K_LEFT,
                            K_RIGHT,
                            QUIT,
                            K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL,
-                           K_SPACE,K_TAB, K_m, K_s
+                           K_SPACE, K_TAB, K_m, K_s
                            )
 from fundo import (Fundo,
                    Telas)
 from elementos import ElementoSprite
 import random
+
 
 class Jogo:
     def __init__(self, fullscreen=False):
@@ -42,21 +43,21 @@ class Jogo:
         if fullscreen:
             flags |= pygame.FULLSCREEN
 
-        infoObject = pygame.display.Info()
-        user_screen = (infoObject.current_w, infoObject.current_h)
-        dim = int(user_screen[1]*0.85)
-        self.screen_size = (int(dim*1.2), dim)
-
+        info_object = pygame.display.Info()
+        user_screen = (info_object.current_w, info_object.current_h)
+        dim = int(user_screen[1] * 0.85)
+        self.screen_size = (int(dim * 1.2), dim)
 
         self.tela = pygame.display.set_mode(self.screen_size, flags=flags, depth=16)
         self.fundo = Fundo()
         self.iniciando = True
+        self.finalizando = False
         self.img_tela_inicial = Telas('tela_inicial.png', self.screen_size)
-        self.img_tela_final = Telas('tela_final.png',self.screen_size)
-        self.img_tela_pausa = Telas('tela_pause.png',self.screen_size)
-        self.img_tela_win = Telas('tela_win.png',self.screen_size)
+        self.img_tela_final = Telas('tela_final.png', self.screen_size)
+        self.img_tela_pausa = Telas('tela_pause.png', self.screen_size)
+        self.img_tela_win = Telas('tela_win.png', self.screen_size)
 
-        self.jogador = Jogador([0.45*self.screen_size[0], 0.8*self.screen_size[1]], 5)
+        self.jogador = Jogador([0.45 * self.screen_size[0], 0.8 * self.screen_size[1]], 5)
         self.interval = 0
         self.nivel = 0
         self.highscore = 0
@@ -69,11 +70,10 @@ class Jogo:
 
         self.vida_virus = 0
 
-        pygame.mouse.set_visible(0)
+        pygame.mouse.set_visible(False)
         pygame.display.set_caption('Corona Shooter')
         self.run = True
         self.pause = False
-
 
         # Animações de Explosão
         self.explosoes_frames = []
@@ -81,35 +81,33 @@ class Jogo:
             filename = f'explosao_{i}.png'
             self.explosoes_frames.append(filename)
 
-
-    def escreve_placar(self,x_score,y_score,x_vidas,y_vidas):
+    def escreve_placar(self, x_score, y_score, x_vidas, y_vidas):
         heart = "♥"
-        vidas = self.fonte.render(f'{self.jogador.get_lives()*heart}', 1, (255, 0, 0))
-        score = self.fonte2.render(f'Score: {self.jogador.pontos}', 1, (255,255,255))
-        vidas_rect = vidas.get_rect(midtop=(self.screen_size[0]*x_vidas, self.screen_size[1]*y_vidas))
-        score_rect = score.get_rect(midtop=(self.screen_size[0]*x_score, self.screen_size[1]*y_score))
+        vidas = self.fonte.render(f'{self.jogador.get_lives() * heart}', True, (255, 0, 0))
+        score = self.fonte2.render(f'Score: {self.jogador.pontos}', True, (255, 255, 255))
+        vidas_rect = vidas.get_rect(midtop=(self.screen_size[0] * x_vidas, self.screen_size[1] * y_vidas))
+        score_rect = score.get_rect(midtop=(self.screen_size[0] * x_score, self.screen_size[1] * y_score))
         self.tela.blit(vidas, vidas_rect)
         self.tela.blit(score, score_rect)
 
-    def escreve_recorde(self, x_score,y_score,x_high,y_high):
-        score = self.fonte2.render(f'Score: {self.jogador.pontos}', 1, (255,255,255))
-        high = self.fonte2.render(f'Recorde: {self.highscore}', 1, (255,255,255))
-        score_rect = score.get_rect(midtop=(self.screen_size[0]*x_score, self.screen_size[1]*y_score))
-        high_rect = score.get_rect(midtop=(self.screen_size[0]*x_high, self.screen_size[1]*y_high))
+    def escreve_recorde(self, x_score, y_score, x_high, y_high):
+        score = self.fonte2.render(f'Score: {self.jogador.pontos}', True, (255, 255, 255))
+        high = self.fonte2.render(f'Recorde: {self.highscore}', True, (255, 255, 255))
+        score_rect = score.get_rect(midtop=(self.screen_size[0] * x_score, self.screen_size[1] * y_score))
+        high_rect = score.get_rect(midtop=(self.screen_size[0] * x_high, self.screen_size[1] * y_high))
         self.tela.blit(score, score_rect)
         self.tela.blit(high, high_rect)
 
-
-    def manutenção(self):
+    def manutencao(self):
         r = random.randint(0, 100)
         x = random.randint(1, self.screen_size[0])
         virii = self.elementos["virii"]
         if r > (10 * len(virii)):
             lives = self.vida_virus
             if self.nivel == 2:
-                enemy = Virus([0,0], lives, image='virus-chefao.png')
+                enemy = Virus([0, 0], lives, image='virus-chefao.png')
             if self.nivel == 1:
-                enemy = Virus([0, 0], lives,image='virus2.png')
+                enemy = Virus([0, 0], lives, image='virus2.png')
             if self.nivel == 0:
                 enemy = Virus([0, 0], lives)
 
@@ -119,7 +117,6 @@ class Jogo:
             if colisores:
                 return
             self.elementos["virii"].add(enemy)
-
 
     def muda_nivel(self):
         xp = self.jogador.get_pontos()
@@ -171,7 +168,7 @@ class Jogo:
         :return: lista de sprites envolvidos na colisão
         """
         if isinstance(elemento, pygame.sprite.RenderPlain):
-            hitted = pygame.sprite.groupcollide(elemento, list, 1, 0)
+            hitted = pygame.sprite.groupcollide(elemento, list, True, False)
             for v in hitted.values():
                 for o in v:
                     Explosao(o.get_pos(), self.explosoes_frames, self.elementos['explosoes'])
@@ -180,14 +177,14 @@ class Jogo:
             return hitted
 
         elif isinstance(elemento, pygame.sprite.Sprite):
-            if pygame.sprite.spritecollide(elemento, list, 1):
+            if pygame.sprite.spritecollide(elemento, list, True):
                 self.som_atingido.play()
                 Explosao(elemento.get_pos(), self.explosoes_frames, self.elementos['explosoes'])
                 action()
             return elemento.morto
 
     def trata_eventos_constantes(self, event):
-        if event.type == pygame.QUIT:
+        if event.type == QUIT:
             self.run = False
             self.iniciando = False
             self.finalizando = False
@@ -205,7 +202,7 @@ class Jogo:
                     for som in [self.som_disparo, self.som_atingido]:
                         pygame.mixer.Sound.set_volume(som, 100)
                     for som in self.sons_explosao:
-                            pygame.mixer.Sound.set_volume(som, 100)
+                        pygame.mixer.Sound.set_volume(som, 100)
                     self.som_paused = not self.som_paused
                 else:
                     for som in [self.som_disparo, self.som_atingido]:
@@ -213,10 +210,6 @@ class Jogo:
                     for som in self.sons_explosao:
                         pygame.mixer.Sound.set_volume(som, 0)
                     self.som_paused = not self.som_paused
-
-
-
-
 
     def trata_eventos_jogando(self):
         event = pygame.event.poll()
@@ -254,7 +247,7 @@ class Jogo:
             if keys[K_RCTRL] or keys[K_LCTRL]:
                 self.jogador.atira(self.elementos["tiros"], self.som_disparo)
 
-    def ação_elemento(self):
+    def acao_elemento(self):
         """
         Executa as ações dos elementos do jogo.
         :return:
@@ -268,7 +261,7 @@ class Jogo:
 
         # Verifica se o personagem trombou em algum inimigo
         self.verifica_impactos(self.jogador, self.elementos["virii"],
-                               self.jogador.colisão)
+                               self.jogador.colisao)
         if self.jogador.morto:
             self.tela_final()
             return 0
@@ -282,13 +275,13 @@ class Jogo:
 
     # Verifica se o usuário pausou o jogo e o mantém em uma tela de pausa
     def verifica_pausa(self):
-        while(self.pause):
+        while self.pause:
             self.img_tela_pausa.draw(self.tela)
             self.escreve_placar(x_score=0.53, y_score=0.65,
                                 x_vidas=0.53, y_vidas=0.70)
             pygame.display.flip()
             event = pygame.event.poll()
-            #evento para sair do jogo ao clicar no X da janela
+            # evento para sair do jogo ao clicar no X da janela
             self.trata_eventos_constantes(event)
             if event.type == pygame.KEYDOWN:
                 if event.key == K_ESCAPE:
@@ -296,7 +289,7 @@ class Jogo:
                     self.pause = False
                 elif event.key == pygame.K_TAB:
                     self.salva_jogo()
-                #evento para fechar a janela ao apertar esc
+                # evento para fechar a janela ao apertar esc
                 elif event.key == K_SPACE:
                     self.run = True
                     self.pause = False
@@ -312,10 +305,10 @@ class Jogo:
         print('Jogo carregado com sucesso! Nível do jogo anterior' + str(teste))
 
     def salva_jogo(self):
-        pickle.dump({'nivel':self.nivel,
-                     'pontos':self.jogador.get_pontos(),
-                     'vidas':self.jogador.get_lives(),
-                     'pos_jogador':self.jogador.get_pos()},open("save.p", "wb"))
+        pickle.dump({'nivel': self.nivel,
+                     'pontos': self.jogador.get_pontos(),
+                     'vidas': self.jogador.get_lives(),
+                     'pos_jogador': self.jogador.get_pos()}, open("save.p", "wb"))
         print('Jogo salvo com sucesso')  # substituir por mensagem de verdade
 
     def tela_inicial(self):
@@ -344,9 +337,9 @@ class Jogo:
         try:
             self.highscore = pickle.load(open("highscore.p", "rb"))
         except:
-            self.highscore = 0
+            pass
 
-        if(self.jogador.pontos) > self.highscore:
+        if self.jogador.pontos > self.highscore:
             pickle.dump(self.jogador.pontos, open("highscore.p", "wb"))
             self.highscore = self.jogador.pontos
 
@@ -364,8 +357,8 @@ class Jogo:
                 if key == K_SPACE:
                     self.finalizando = False
                     self.run = True
-                    self.fundo=Fundo()
-                    self.nivel =0
+                    self.fundo = Fundo()
+                    self.nivel = 0
                     self.vida_virus = 0
                     self.jogador = Jogador([0.45 * self.screen_size[0], 0.7 * self.screen_size[0]], 5)
                     self.loop()
@@ -382,11 +375,11 @@ class Jogo:
         self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
 
         while self.run:
-            clock.tick(1000/dt)
+            clock.tick(int(1000 / dt))
             self.trata_eventos_jogando()
             self.verifica_pausa()
-            self.ação_elemento()
-            self.manutenção()
+            self.acao_elemento()
+            self.manutencao()
             # Atualiza Elementos
             self.atualiza_elementos(dt)
             # Desenhe no back buffer
@@ -394,13 +387,13 @@ class Jogo:
             self.escreve_placar(x_score=0.75, y_score=0,
                                 x_vidas=0.15, y_vidas=0)
             self.muda_nivel()
-            #texto = self.fonte.render(f"Vidas: {self.jogador.get_lives()}", True, (255, 255, 255), (0, 0, 0))
+            # texto = self.fonte.render(f"Vidas: {self.jogador.get_lives()}", True, (255, 255, 255), (0, 0, 0))
 
             pygame.display.flip()
 
 
 class Nave(ElementoSprite):
-    def __init__(self, position, lives=0, speed=[0, 0], image=None, new_size=[83, 248]):
+    def __init__(self, position, lives=0, speed=(0, 0), image=None, new_size=(83, 248)):
         self.acceleration = [4, 4]
         if not image:
             image = "seringa.png"
@@ -413,7 +406,7 @@ class Nave(ElementoSprite):
     def set_lives(self, lives):
         self.lives = lives
 
-    def colisão(self):
+    def colisao(self):
         if self.get_lives() <= 0:
             self.kill()
         else:
@@ -449,9 +442,9 @@ class Nave(ElementoSprite):
     def accel_right(self):
         speed = self.get_speed()
         self.set_speed((speed[0] + self.acceleration[0], speed[1]))
-        
+
     def accel_zero(self):
-        self.set_speed([0,0])
+        self.set_speed([0, 0])
 
 
 class Virus(Nave):
@@ -461,8 +454,8 @@ class Virus(Nave):
         super().__init__(position, lives, [0, 0], image, size)
 
     def velocidade_virus(self):
-        x = random.randrange(-2, 2)
-        y = random.randrange(2, 5)
+        x = randrange(-2, 2)
+        y = randrange(2, 5)
         move_speed = (x, y)
         return move_speed
 
@@ -482,7 +475,7 @@ class Jogador(Nave):
     das outras.
     """
 
-    def __init__(self, position, lives=10, image=None, new_size=[62, 186]):
+    def __init__(self, position, lives=10, image=None, new_size=(62, 186)):
         if not image:
             image = "seringa.png"
         super().__init__(position, lives, [0, 0], image, new_size)
@@ -493,20 +486,20 @@ class Jogador(Nave):
                       self.speed[1] * dt / 16)
         self.rect = self.rect.move(move_speed)
 
-        if (self.rect.right > self.area.right):
+        if self.rect.right > self.area.right:
             self.rect.right = self.area.right
 
-        elif (self.rect.left < 0):
+        elif self.rect.left < 0:
             self.rect.left = 0
 
-        if (self.rect.bottom > self.area.bottom):
+        if self.rect.bottom > self.area.bottom:
             self.rect.bottom = self.area.bottom
 
-        elif (self.rect.top < 0):
+        elif self.rect.top < 0:
             self.rect.top = 0
 
     def get_pos(self):
-        return (self.rect.center[0], self.rect.top)
+        return self.rect.center[0], self.rect.top
 
     def get_pontos(self):
         return self.pontos
@@ -517,9 +510,6 @@ class Jogador(Nave):
     def atira(self, lista_de_tiros, som_disparo, image=None):
         som_disparo.play()
         l = 1
-        if self.pontos > 500:
-            l = 3
-
         p = self.get_pos()
         speeds = self.get_fire_speed(l)
         for s in speeds:
@@ -550,6 +540,7 @@ class Tiro(ElementoSprite):
         if list is not None:
             self.add(list)
 
+
 class Explosao(ElementoSprite):
     def __init__(self, position, lista_imgs, lista_de_explosoes):
         self.frame = 0
@@ -571,6 +562,7 @@ class Explosao(ElementoSprite):
                 self.set_image(image)
             else:
                 self.kill()
+
 
 if __name__ == '__main__':
     J = Jogo(fullscreen=False)
