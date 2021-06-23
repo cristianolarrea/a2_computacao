@@ -114,7 +114,7 @@ class Jogo:
 
     def muda_nivel(self):
         xp = self.jogador.get_pontos()
-        if xp == 5:
+        if xp == 20:
             self.nivel = 1
             self.jogador.set_lives(self.jogador.get_lives() + 3)
             self.jogador.set_pontos(self.jogador.get_pontos() + 1)
@@ -124,13 +124,13 @@ class Jogo:
                 old_size = v.get_size()
                 v.scale(old_size)
                 self.constroi_nivel()
-        if xp == 20:
+        if xp == 60:
             self.nivel = 2
             self.jogador.set_lives(self.jogador.get_lives() + 3)
             self.jogador.set_pontos(self.jogador.get_pontos() + 1)
             for v in self.elementos['virii']:
                 v.kill()
-                v.set_lives(20)
+                v.set_lives(4)
                 old_size = v.get_size()
                 v.scale(old_size)
                 self.constroi_nivel()
@@ -141,7 +141,7 @@ class Jogo:
             self.vida_virus = 1
         if self.nivel == 2:
             self.fundo = Fundo("street.jpg")
-            self.vida_virus = 20
+            self.vida_virus = 4
 
     def atualiza_elementos(self, dt):
         self.fundo.update(dt)
@@ -383,7 +383,7 @@ class Jogo:
 
 class Nave(ElementoSprite):
     def __init__(self, position, lives=0, speed=[0, 0], image=None, new_size=[83, 248]):
-        self.acceleration = [3, 3]
+        self.acceleration = [4, 4]
         if not image:
             image = "seringa.png"
         super().__init__(image, position, speed, new_size)
