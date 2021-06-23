@@ -60,7 +60,11 @@ class Jogo:
         self.nivel = 0
         self.fonte = pygame.font.SysFont('arial', 42)
         fonte_dir = path.join(path.dirname(__file__), 'fonte')
-        self.fonte2 = pygame.font.Font(path.join(fonte_dir, 'fonte.ttf'), 42)
+        try:
+            self.fonte2 = pygame.font.Font(path.join(fonte_dir, 'fonte.ttf'), 42)
+        except:
+            self.fonte2 = pygame.font.Font(path.join(fonte_dir, 'fonte.TTF'), 42)
+
         self.vida_virus = 0
 
         pygame.mouse.set_visible(0)
@@ -198,6 +202,7 @@ class Jogo:
                     for som in self.sons_explosao:
                         pygame.mixer.Sound.set_volume(som, 0)
                     self.som_paused = not self.som_paused
+
 
 
 
@@ -431,7 +436,7 @@ class Nave(ElementoSprite):
 
 
 class Virus(Nave):
-    def __init__(self, position, lives=0, speed=None, image=None, size=(75, 75)):
+    def __init__(self, position, lives=0, image=None, size=(75, 75)):
         if not image:
             image = "virus.png"
         super().__init__(position, lives, [0, 0], image, size)
@@ -445,6 +450,7 @@ class Virus(Nave):
     def set_speed(self, speed):
         move_speed = self.velocidade_virus()
         self.speed = move_speed
+
 
 class Jogador(Nave):
     """
